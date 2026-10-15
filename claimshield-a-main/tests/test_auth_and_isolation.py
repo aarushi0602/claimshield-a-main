@@ -94,6 +94,21 @@ def test_missing_identity_cannot_read_any_case_or_create_audit(identity):
         assert client.get("/api/samples", headers={"X-Goog-Authenticated-User-ID": ALICE}).status_code == 401
 
 
+def test_dashboard_claim_history_is_owner_scoped_even_if_index_contains_foreign_case(identity):
+    seed_case()
+    storage = get_services().storage
+    alice = auth.Principal(ALICE, MEMBERS[ALICE], auth.IAP_ISSUER, 0)
+    bob = auth.Principal(BOB, MEMBERS[BOB], auth.IAP_ISSUER, 0)
+    storage.put(main._history_index_key(alice), json.dumps({"case_ids": [CASE]}).encode())
+    storage.put(main._history_index_key(bob), json.dumps({"case_ids": [CASE]}).encode())
+    with TestClient(main.app, base_url=ORIGIN) as client:
+        owner_dashboard = client.get("/api/dashboard", headers=headers(identity(ALICE))).json()
+        other_dashboard = client.get("/api/dashboard", headers=headers(identity(BOB))).json()
+    assert owner_dashboard["summary"]["claim_count"] == 1
+    assert other_dashboard["summary"]["claim_count"] == 0
+    assert all(row["claim_id"] != CASE for row in other_dashboard["claims"])
+
+
 @pytest.mark.parametrize("bad", ["expired", "issuer", "audience", "future", "signature", "algorithm", "unsigned", "missing-exp", "kid"])
 def test_invalid_assertions_rejected(identity, bad):
     token = identity()

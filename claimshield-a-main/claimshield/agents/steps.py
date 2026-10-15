@@ -8,6 +8,7 @@ ADK agent; `runner.py` can also call them directly when ADK isn't installed.
 from __future__ import annotations
 
 import itertools
+import re
 from collections import defaultdict
 from datetime import date
 from typing import Any, Callable
@@ -19,7 +20,8 @@ from ..models import (Bill, Clause, Finding, FindingType, Letter, PolicyCitation
 from ..money import inr
 from ..services import Services
 from ..services.llm import merge_terms
-from ..services.parsing import ParseError, categorize, normalize_bill, normalize_policy
+from ..services.parsing import ParseError, categorize, normalize_bill, normalize_policy, policy_document_identity
+from ..services.finding_evidence import attach_finding_evidence
 from ..trace import Trace
 
 Step = Callable[[dict[str, Any], Trace, Services], dict[str, Any]]
@@ -44,9 +46,15 @@ def _cite_fn(state: dict[str, Any]) -> Callable[[str], PolicyCitation | None]:
 
     def cite(topic: str) -> PolicyCitation | None:
         c = clauses.get(topic)
-        return PolicyCitation(clause_id=c.clause_id, title=c.title, quote=c.text, source=c.source, page=c.page) if c else None
+        return PolicyCitation(clause_id=c.clause_id, title=c.title, quote=c.text, source=c.source,
+                              page=c.page, document_id=c.document_id, version_id=c.version_id) if c else None
 
     return cite
+
+
+def _uncertain_policy_topics(found: dict[str, Clause | None]) -> list[str]:
+    markers = re.compile(r"\b(?:may be considered|at the discretion|as determined by the insurer|unclear|ambiguous)\b", re.I)
+    return [topic for topic, clause in found.items() if clause and markers.search(clause.text)]
 
 
 def _ids(prefix: str) -> Callable[[], str]:
@@ -93,8 +101,10 @@ def intake_step(state: dict[str, Any], trace: Trace, svc: Services) -> dict[str,
         hospital=bill.hospital, procedure=bill.procedure, lines=len(bill.line_items),
     )
 
-    raw_policy, _ = parse(state["policy_key"], state.get("policy_name", "policy"))
-    policy = normalize_policy(raw_policy, state.get("policy_name", "policy.pdf"))
+    raw_policy, policy_bytes = parse(state["policy_key"], state.get("policy_name", "policy"))
+    document_id = policy_document_identity(policy_bytes)
+    policy = normalize_policy(raw_policy, state.get("policy_name", "policy.pdf"),
+                              document_id=document_id, version_id=document_id)
     trace.emit(agent, "result", f"Policy: {policy.plan_name} ({policy.insurer}) - {len(policy.clauses)} numbered clauses")
 
     if bill.policy_number and policy.policy_number and bill.policy_number != policy.policy_number:
@@ -143,6 +153,10 @@ def policy_step(state: dict[str, Any], trace: Trace, svc: Services) -> dict[str,
         trace.emit(agent, "tool", f"{backend}: \"{query}\" -> {shown}", topic=topic)
 
     terms = extract_terms(found)
+    uncertain_topics = _uncertain_policy_topics(found)
+    terms.uncertain_topics = uncertain_topics
+    for topic in uncertain_topics:
+        trace.emit(agent, "warn", f"Policy wording for {topic} is ambiguous; its extracted value is marked uncertain and requires review")
     if svc.llm.available:
         try:
             joined = "\n\n".join(f"{c.clause_id} {c.title}. {c.text}" for c in found.values() if c)
@@ -301,6 +315,33 @@ def benchmark_step(state: dict[str, Any], trace: Trace, svc: Services) -> dict[s
     known = svc.store.categories()
     covered = sum(1 for li in bill.line_items if li.code in known)
     trace.emit(agent, "tool", f"{svc.store.name}: {covered} of {len(bill.line_items)} lines have a reference price")
+    benchmark_metadata = svc.store.benchmark_metadata
+    region = bill.region or benchmark_metadata.get("default_region", "")
+    dataset_version = benchmark_metadata.get("version", "legacy-unversioned")
+    region_basis = "hospital region extracted from bill" if bill.region else "dataset default region; hospital region unavailable"
+    comparison_rows = svc.store.query("benchmark_comparisons", case_id=case_id, region=region,
+                                      dataset_version=dataset_version)
+    comparisons = []
+    for row in comparison_rows:
+        comparable = row.get("p90_unit_price") is not None
+        comparisons.append({
+            "line_no": row["line_no"], "code": row.get("code") or None,
+            "description": row["description"], "procedure": row.get("procedure") or None,
+            "region": row.get("benchmark_region") or region, "region_basis": region_basis,
+            "unit": row["unit"], "quantity": row["qty"], "billed_unit_rate": row["billed_unit_rate"],
+            "comparison_range": ({"p50": row["p50_unit_price"], "p90": row["p90_unit_price"]} if comparable else None),
+            "price_source": row.get("price_source"), "price_type": row.get("price_type"),
+            "provider_id": row.get("provider_id"),
+            "reference_date": row.get("reference_date"), "dataset_version": row.get("dataset_version"),
+            "dataset_label": benchmark_metadata.get("description", "Reference benchmark"),
+            "comparable": comparable,
+            "status": "comparable" if comparable else "missing_comparable_data",
+            "missing_reason": (None if comparable else
+                               "Comparable code and unit exist in another region, but no reference is available for the selected region." if row.get("other_region_matches") else
+                               "The code exists in this region under a different unit." if row.get("other_unit_matches") else
+                               "No comparable procedure code was found in this region and unit."),
+            "confidence_label": "Worth reviewing" if comparable and row["billed_unit_rate"] > row["p90_unit_price"] * float(svc.settings.outlier_ratio) else None,
+        })
 
     flagged: set[int] = set()
     rows = svc.store.query("upcoding", case_id=case_id, procedure=bill.procedure)
@@ -321,7 +362,8 @@ def benchmark_step(state: dict[str, Any], trace: Trace, svc: Services) -> dict[s
             detected_by=agent, method="BigQuery SQL (upcoding.sql) vs procedure_benchmarks",
         ))
 
-    rows = svc.store.query("benchmark_outliers", case_id=case_id, outlier_ratio=float(svc.settings.outlier_ratio))
+    rows = svc.store.query("benchmark_outliers", case_id=case_id, region=region,
+                           dataset_version=dataset_version, outlier_ratio=float(svc.settings.outlier_ratio))
     trace.emit(agent, "tool", f"{svc.store.name}: benchmark_outliers.sql (>{svc.settings.outlier_ratio:g}x p90) -> {len(rows)} line(s)")
     for r in rows:
         if r["line_no"] in flagged:
@@ -336,9 +378,18 @@ def benchmark_step(state: dict[str, Any], trace: Trace, svc: Services) -> dict[s
                          f"Policies pay 'reasonable and customary' charges, so the insurer may also question it. Ask the hospital to justify the rate."),
             confidence="Worth reviewing", impact=over, counterparty="hospital", bill_correction=over, correction_line=r["line_no"],
             detected_by=agent, method="BigQuery SQL (benchmark_outliers.sql)",
+            benchmark={"region": r.get("region") or region, "unit": r.get("unit"),
+                       "billed_unit_rate": r["unit_price"], "comparison_range": {"p50": r["p50_unit_price"], "p90": r["p90_unit_price"]},
+                       "price_source": r.get("price_source") or r.get("source"), "price_type": r.get("price_type", "informational"),
+                       "provider_id": r.get("provider_id"),
+                       "reference_date": str(r.get("reference_date") or benchmark_metadata.get("effective_date", "unknown")),
+                       "dataset_version": r.get("dataset_version") or dataset_version,
+                       "dataset_label": benchmark_metadata.get("description", "Reference benchmark"),
+                       "confidence_label": "Worth reviewing"},
         ))
     trace.emit(agent, "result", f"{len(findings)} pricing signal(s), all marked 'worth reviewing'")
-    return {"benchmark_findings": [f.model_dump(mode="json") for f in findings]}
+    return {"benchmark_findings": [f.model_dump(mode="json") for f in findings],
+            "benchmark_comparisons": comparisons}
 
 
 # ---------------------------------------------------------------------------------------
@@ -364,7 +415,9 @@ def reconciliation_step(state: dict[str, Any], trace: Trace, svc: Services) -> d
     trace.emit(agent, "start", "Reconciling what was billed, what the policy covers and what you should owe")
     raw = [Finding.model_validate(f) for f in state.get("audit_findings", []) + state.get("benchmark_findings", [])]
     raw.sort(key=lambda f: (f.confidence != "High", -f.impact))
+    policy = _policy(state)
     findings = [f.model_copy(update={"finding_id": f"F{i}"}) for i, f in enumerate(raw, start=1)]
+    findings = [attach_finding_evidence(f, bill, policy, state.get("bill_key"), state.get("policy_key")) for f in findings]
 
     high = [f for f in findings if f.confidence == "High"]
     line_hi, gross_hi = _corrections(high)
@@ -546,7 +599,7 @@ def dispute_step(state: dict[str, Any], trace: Trace, svc: Services) -> dict[str
     case_id = state["case_id"]
     artifacts: dict[str, str] = {}
     artifacts["report"] = svc.storage.put(f"cases/{case_id}/reconciliation_report.pdf",
-                                          report_pdf(case_id, bill, policy, findings, rec, svc.describe()), "application/pdf")
+                                          report_pdf(case_id, bill, policy, findings, rec, svc.describe(), _terms(state)), "application/pdf")
     for letter in letters:
         artifacts[f"letter_{letter.recipient}"] = svc.storage.put(
             f"cases/{case_id}/dispute_letter_{letter.recipient}.pdf", letter_pdf(letter, bill), "application/pdf")

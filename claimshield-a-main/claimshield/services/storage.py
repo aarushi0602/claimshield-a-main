@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+import os
+import tempfile
 
 
 class LocalStorage:
@@ -15,7 +17,14 @@ class LocalStorage:
     def put(self, key: str, data: bytes, content_type: str = "application/octet-stream") -> str:
         path = self.root / key
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(data)
+        descriptor, temporary = tempfile.mkstemp(dir=path.parent, prefix='.writing-')
+        try:
+            with os.fdopen(descriptor, 'wb') as stream:
+                stream.write(data)
+            os.replace(temporary, path)
+        finally:
+            if os.path.exists(temporary):
+                os.unlink(temporary)
         return f"file://{path}"
 
     def create(self, key: str, data: bytes, content_type: str = "application/octet-stream") -> None:

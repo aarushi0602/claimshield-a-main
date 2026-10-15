@@ -59,7 +59,7 @@ def build_services(settings: Settings | None = None) -> Services:
         settings=s,
         parser=_try(s.use_docai, "Document AI", lambda: DocumentAIParser(s.project, s.docai_location, s.docai_processor_id), LocalPdfParser, w),
         local_parser=LocalPdfParser(),
-        store=_try(s.use_bigquery, "BigQuery", lambda: BigQueryStore(s.project, s.bq_dataset), lambda: SqliteStore(s.data_dir / "reference"), w),
+        store=_try(s.use_bigquery, "BigQuery", lambda: BigQueryStore(s.project, s.bq_dataset, reference_dir=s.data_dir / "reference"), lambda: SqliteStore(s.data_dir / "reference"), w),
         retriever=_try(s.use_vertex_search, "Vertex AI Search",
                        lambda: VertexSearchRetriever(s.project, s.vertex_search_location, s.vertex_search_datastore), LocalRetriever, w),
         llm=_try(s.use_gemini, "Gemini", lambda: GeminiLLM(s.project, s.location, s.gemini_model), TemplateLLM, w),

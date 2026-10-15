@@ -44,6 +44,9 @@ class TemplateLLM:
     def review_lines(self, bill: Bill) -> list[dict[str, Any]]:
         return []
 
+    def extract_rejection_reasons(self, letter_text: str) -> list[dict[str, str]]:
+        return []
+
 
 class GeminiLLM:
     available = True
@@ -163,6 +166,18 @@ class GeminiLLM:
             f"Diagnosis: {bill.diagnosis}\nProcedure: {bill.procedure}\nStay: {bill.admission_date} to {bill.discharge_date}\n{lines}"
         )
         return json.loads(self._generate(prompt, json_schema=schema, temperature=0))
+
+    def extract_rejection_reasons(self, letter_text: str) -> list[dict[str, str]]:
+        schema = {"type": "ARRAY", "items": {"type": "OBJECT", "properties": {
+            "quote": {"type": "STRING", "description": "Verbatim sentence or short passage from the rejection notice"}},
+            "required": ["quote"]}}
+        prompt = (
+            "Extract only the insurer's stated reasons for rejecting, reducing, or withholding the claim. "
+            "Return short verbatim quotes from the notice. Do not infer reasons, policy terms, deadlines, or legal conclusions. "
+            "If no explicit reason appears, return an empty array.\n\nNOTICE TEXT:\n" + letter_text[:20000]
+        )
+        result = json.loads(self._generate(prompt, json_schema=schema, temperature=0))
+        return result if isinstance(result, list) else []
 
 
 def merge_terms(rule_terms: PolicyTerms, llm_terms: dict[str, Any] | None) -> tuple[PolicyTerms, list[str]]:

@@ -24,9 +24,12 @@ class LineItem(BaseModel):
     description: str
     dept: str = ""
     category: Category = "OTHER"
+    unit: str = "per_item"
     qty: float
     unit_price: float
     amount: float
+    source_page: Optional[int] = None
+    source_text: str = ""
 
 
 class Deduction(BaseModel):
@@ -39,6 +42,7 @@ class Bill(BaseModel):
     bill_number: str = ""
     hospital: str = ""
     hospital_address: str = ""
+    region: str = ""
     network_hospital: bool = True
     patient_name: str = ""
     patient_age: Optional[int] = None
@@ -70,6 +74,8 @@ class Clause(BaseModel):
     page: int = 1
     source: str = ""
     score: float = 0.0
+    document_id: str | None = None
+    version_id: str | None = None
 
     def cite(self) -> str:
         return f"§{self.clause_id} {self.title}"
@@ -82,6 +88,8 @@ class PolicyDoc(BaseModel):
     source: str = ""
     clauses: list[Clause] = Field(default_factory=list)
     schedule: dict[str, str] = Field(default_factory=dict)
+    document_id: str | None = None
+    version_id: str | None = None
 
 
 class SubLimit(BaseModel):
@@ -105,6 +113,7 @@ class PolicyTerms(BaseModel):
     personal_items_excluded: bool = True
     clause_refs: dict[str, str] = Field(default_factory=dict)
     extraction: str = "rules"
+    uncertain_topics: list[str] = Field(default_factory=list)
 
 
 class FindingType(str, Enum):
@@ -136,6 +145,8 @@ class PolicyCitation(BaseModel):
     quote: str
     source: str = ""
     page: int = 1
+    document_id: str | None = None
+    version_id: str | None = None
 
 
 class Finding(BaseModel):
@@ -154,6 +165,8 @@ class Finding(BaseModel):
     detected_by: str
     method: str
     topic: str = ""
+    evidence: Optional[dict] = None
+    benchmark: Optional[dict] = None
 
 
 class Entitlement(BaseModel):
