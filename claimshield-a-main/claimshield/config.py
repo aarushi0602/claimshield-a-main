@@ -45,6 +45,10 @@ class Settings:
     data_dir: Path
     work_dir: Path
     outlier_ratio: float
+    auth_mode: str = "iap"
+    iap_audience: str = ""
+    public_origin: str = ""
+    auth_memberships: str = "{}"
 
     @property
     def mode_summary(self) -> dict[str, str]:
@@ -79,4 +83,8 @@ def load_settings() -> Settings:
         data_dir=Path(os.getenv("CLAIMSHIELD_DATA_DIR", PROJECT_ROOT / "data")),
         work_dir=Path(os.getenv("CLAIMSHIELD_WORK_DIR", PROJECT_ROOT / "var")),
         outlier_ratio=float(os.getenv("CLAIMSHIELD_OUTLIER_RATIO", "1.3")),
+        auth_mode=os.getenv("CLAIMSHIELD_AUTH_MODE", "iap"),
+        iap_audience=os.getenv("CLAIMSHIELD_IAP_AUDIENCE", ""),
+        public_origin=os.getenv("CLAIMSHIELD_PUBLIC_ORIGIN", ""),
+        auth_memberships=os.getenv("CLAIMSHIELD_AUTH_MEMBERSHIPS", "{}"),
     )

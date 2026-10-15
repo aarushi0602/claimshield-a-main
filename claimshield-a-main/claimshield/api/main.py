@@ -16,18 +16,21 @@ import re
 import time
 import uuid
 import warnings
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any, Optional
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 warnings.filterwarnings("ignore", category=UserWarning, module="google")
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile  # noqa: E402
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile  # noqa: E402
 from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse, Response, StreamingResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 
 from ..agents.runner import run_audit  # noqa: E402
-from ..config import PROJECT_ROOT  # noqa: E402
+from ..config import PROJECT_ROOT, load_settings  # noqa: E402
+from .auth import authenticate, configure_auth, Principal  # noqa: E402
+from ..services.cases import CaseRepository  # noqa: E402
 from ..services import get_services  # noqa: E402
 from ..services.parsing import looks_like_pdf  # noqa: E402
 from ..trace import TRACES  # noqa: E402
@@ -36,16 +39,35 @@ logging.basicConfig(level=logging.INFO, format="%(message)s")
 log = logging.getLogger("claimshield.api")
 
 MAX_UPLOAD = 15 * 1024 * 1024
-CASE_ID = re.compile(r"^[a-z0-9-]{6,64}$")
 ARTIFACT_FILES = {
     "reconciliation_report.pdf": "report",
     "dispute_letter_insurer.pdf": "letter_insurer",
     "dispute_letter_hospital.pdf": "letter_hospital",
 }
 
-app = FastAPI(title="ClaimShield AI", version="0.1.0")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Validate before any cloud services initialize; missing auth never enables demo.
+    app.state.auth_config = configure_auth(load_settings())
+    yield
+
+
+app = FastAPI(title="ClaimShield AI", version="0.1.0", lifespan=lifespan)
 CASES: dict[str, dict[str, Any]] = {}
 _TASKS: set[asyncio.Task] = set()
+
+
+@app.middleware("http")
+async def identity_boundary(request: Request, call_next):
+    try:
+        request.state.principal = await asyncio.to_thread(authenticate, request, app.state.auth_config)
+    except HTTPException as exc:
+        return JSONResponse({"detail": exc.detail}, status_code=exc.status_code,
+                            headers={"Cache-Control": "no-store"})
+    response = await call_next(request)
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    return response
 
 
 def _catalog() -> dict[str, Any]:
@@ -92,6 +114,7 @@ async def _read_upload(upload: UploadFile, label: str) -> bytes:
 
 @app.post("/api/audit")
 async def start_audit(
+    request: Request,
     bill: Optional[UploadFile] = File(None),
     policy: Optional[UploadFile] = File(None),
     sample_bill: Optional[str] = Form(None),
@@ -118,7 +141,9 @@ async def start_audit(
     else:
         raise HTTPException(400, "Upload a policy PDF or choose a sample policy.")
 
-    case_id = f"case-{time.strftime('%Y%m%d')}-{uuid.uuid4().hex[:8]}"
+    principal = request.state.principal
+    case_id = f"case-{uuid.uuid4().hex}"
+    await asyncio.to_thread(CaseRepository(svc.storage).create, case_id, principal)
     bill_key, policy_key = f"cases/{case_id}/bill.pdf", f"cases/{case_id}/policy.pdf"
     await asyncio.to_thread(svc.storage.put, bill_key, bill_bytes, "application/pdf")
     await asyncio.to_thread(svc.storage.put, policy_key, policy_bytes, "application/pdf")
@@ -126,7 +151,8 @@ async def start_audit(
     CASES[case_id] = {"case_id": case_id, "status": "running", "bill_name": bill_name, "policy_name": policy_name}
 
     async def work() -> None:
-        state = await run_audit(case_id, bill_key, policy_key, bill_name, policy_name)
+        state = await run_audit(case_id, bill_key, policy_key, bill_name, policy_name,
+                                owner_id=principal.subject, tenant_id=principal.tenant)
         CASES[case_id] = state
         try:
             await asyncio.to_thread(svc.storage.put, f"cases/{case_id}/case.json",
@@ -140,12 +166,11 @@ async def start_audit(
     return {"case_id": case_id}
 
 
-def _case(case_id: str) -> dict[str, Any]:
-    if not CASE_ID.match(case_id):
-        raise HTTPException(404)
+def _case(case_id: str, principal: Principal) -> dict[str, Any]:
+    svc = get_services()
+    CaseRepository(svc.storage).authorize(case_id, principal)
     if case_id in CASES:
         return CASES[case_id]
-    svc = get_services()
     key = f"cases/{case_id}/case.json"
     if svc.storage.exists(key):
         CASES[case_id] = json.loads(svc.storage.get(key))
@@ -154,18 +179,25 @@ def _case(case_id: str) -> dict[str, Any]:
 
 
 @app.get("/api/cases/{case_id}/events")
-async def events(case_id: str) -> StreamingResponse:
-    case = _case(case_id)
+async def events(case_id: str, request: Request) -> StreamingResponse:
+    principal = request.state.principal
+    case = await asyncio.to_thread(_case, case_id, principal)
 
     async def stream():
         if case.get("status") != "running" and "trace" in case:
             for e in case["trace"]:
+                if time.time() >= principal.expires_at:
+                    yield "event: auth_expired\ndata: {}\n\n"
+                    return
                 yield f"data: {json.dumps(e)}\n\n"
             yield "event: end\ndata: {}\n\n"
             return
         trace = TRACES.get(case_id)
         cursor, last_beat = 0, time.monotonic()
         while True:
+            if time.time() >= principal.expires_at:
+                yield "event: auth_expired\ndata: {}\n\n"
+                return
             batch = trace.since(cursor)
             for e in batch:
                 yield f"data: {json.dumps(e, default=str)}\n\n"
@@ -188,8 +220,8 @@ async def events(case_id: str) -> StreamingResponse:
 
 
 @app.get("/api/cases/{case_id}")
-def case(case_id: str) -> JSONResponse:
-    c = _case(case_id)
+def case(case_id: str, request: Request) -> JSONResponse:
+    c = _case(case_id, request.state.principal)
     if c.get("status") == "running":
         return JSONResponse({"case_id": case_id, "status": "running"})
     keep = ("case_id", "status", "error", "bill", "policy_doc", "policy_terms", "findings", "reconciliation", "letters", "stack", "bill_name", "policy_name")
@@ -201,8 +233,8 @@ def case(case_id: str) -> JSONResponse:
 
 
 @app.get("/api/cases/{case_id}/files/{name}")
-def case_file(case_id: str, name: str) -> Response:
-    c = _case(case_id)
+def case_file(case_id: str, name: str, request: Request) -> Response:
+    c = _case(case_id, request.state.principal)
     if name not in ARTIFACT_FILES or ARTIFACT_FILES[name] not in c.get("artifacts", {}):
         raise HTTPException(404)
     data = get_services().storage.get(f"cases/{case_id}/{name}")
@@ -210,8 +242,8 @@ def case_file(case_id: str, name: str) -> Response:
 
 
 @app.get("/api/cases/{case_id}/letters/{recipient}.txt")
-def letter_text(case_id: str, recipient: str) -> PlainTextResponse:
-    c = _case(case_id)
+def letter_text(case_id: str, recipient: str, request: Request) -> PlainTextResponse:
+    c = _case(case_id, request.state.principal)
     for letter in c.get("letters", []):
         if letter["recipient"] == recipient:
             return PlainTextResponse(f"To,\n{letter['to']}\n\nSubject: {letter['subject']}\n\n{letter['body']}\n",

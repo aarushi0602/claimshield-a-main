@@ -79,14 +79,56 @@ docs/          DEMO_SCRIPT.md
 ```bash
 make setup                 # python3.11 venv + deps
 cp .env.example .env       # all cloud flags false by default
-make test                  # 21 tests: answer key, money math, API, guards
+make test                  # answer key, money math, API, guards, isolation and CLI tests
 make samples               # run all 4 synthetic bills, print findings
 make run                   # http://localhost:8080
 ```
 
 Open the UI, pick a sample case (or upload a bill and a policy PDF) and press **Audit**. `CLAIMSHIELD_DEMO_PACE=0.35` in `.env` slows the trace so it can be followed live. Local mode otherwise finishes in about a second.
 
-To run in Docker instead: `make docker`.
+To run in Docker on Linux instead: `make docker`. The local demo uses host networking
+and binds to loopback. Docker Desktop requires its host-networking feature to be enabled;
+otherwise use the native Windows setup below. Do not publish a demo container externally.
+
+### Windows (PowerShell, Python 3.11)
+
+From the repository directory:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/setup_local.ps1
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -W ignore scripts/run_samples.py
+$env:CLAIMSHIELD_DEMO_PACE = "0.35"
+$env:CLAIMSHIELD_AUTH_MODE = "demo"
+.\.venv\Scripts\python.exe -m uvicorn claimshield.api.main:app --host 127.0.0.1 --port 8080
+```
+
+The setup script accepts `-Python C:\path\to\python.exe` if `python` is not Python 3.11.
+It creates an isolated environment, installs `requirements.lock`, and checks dependency
+consistency. It does not create or overwrite `.env`. With no existing environment overrides,
+the processing pipeline uses local services and ADK. The HTTP app requires an explicit
+authentication mode, as shown above. The sample CLI emits UTF-8, including redirected output,
+and returns a nonzero exit code if any audit fails.
+
+### Reproducible dependencies and isolated tests
+
+`requirements.txt` and `requirements-dev.txt` declare direct dependencies;
+`requirements.lock` includes those manifests and pins the resolved transitive versions.
+The dependency snapshot is validated on **CPython 3.11, Windows x64**. Other platforms
+can require additional platform-specific dependencies (for example uvloop); their clean
+installation must be verified separately. The Docker build still uses its existing runtime
+manifest and is not covered by this Windows dependency snapshot.
+
+Ordinary pytest runs force the five cloud service flags off before test collection, use
+the repository's synthetic fixtures, and give each test temporary storage. Developer `.env`
+settings cannot redirect these tests into normal case storage. External socket connections
+in the pytest process are blocked; loopback remains available for local tools. CLI subprocess
+tests inherit the isolated local configuration. ADK-labelled pipeline tests assert that ADK
+actually ran, and both runners must match the same findings and monetary results.
+
+To update dependencies, resolve the changed manifests in a fresh Python 3.11 environment,
+regenerate the lock while preserving its platform markers and manifest include, then run
+`pip check` and the full local suite. A successful local run does not verify live cloud adapters.
 
 ## Synthetic data
 
@@ -101,6 +143,55 @@ To run in Docker instead: `make docker`.
 
 Correctly applied exclusions (attendant food on BILL-001, gloves and masks on BILL-003) are deliberately *not* flagged.
 
+## Authentication and case access
+
+The HTTP app defaults to **IAP mode** and refuses to start without valid authentication
+configuration. The local synthetic demo requires `CLAIMSHIELD_AUTH_MODE=demo` (included
+in `.env.example`), accepts only loopback clients and hosts, and refuses to start on Cloud Run.
+Demo cases belong to one local demo identity; this mode is not multi-user authentication.
+
+Production uses [native Cloud Run IAP](https://docs.cloud.google.com/run/docs/securing/identity-aware-proxy-cloud-run)
+for hosted Google sign-in and browser cookies. The application independently validates each
+`X-Goog-IAP-JWT-Assertion` against Google's fixed public-key endpoint, with ES256, the exact
+issuer and audience, issuance time and expiry. Unsigned user headers and caller-supplied
+tenant IDs are never trusted. See [IAP signed-header verification](https://docs.cloud.google.com/iap/docs/signed-headers-howto).
+
+Configure these server-side values before starting in IAP mode:
+
+```dotenv
+CLAIMSHIELD_AUTH_MODE=iap
+CLAIMSHIELD_IAP_AUDIENCE=/projects/123456789/locations/us-central1/services/claimshield-ai
+CLAIMSHIELD_PUBLIC_ORIGIN=https://your-service.example
+CLAIMSHIELD_AUTH_MEMBERSHIPS='{"accounts.google.com:VERIFIED_SUBJECT_ID":"tenant-a"}'
+```
+
+Replace the examples with the service's actual signed-header audience, exact browser origin
+(no trailing slash), and verified stable Google subject IDs. Membership is an operator-managed
+allowlist, not a self-service field. Restart/redeploy with updated configuration when changing
+membership. IAP access policy and application membership are both required. No administrative
+sharing is implemented: another member of the same tenant cannot access the owner's case.
+
+Ownership is created once in `cases/<id>/owner.json` before processing begins. Every result,
+event stream, PDF and text-letter request checks this record before consulting memory or
+loading stored results. Legacy cases without this metadata, including standalone CLI outputs,
+are inaccessible over HTTP. They are left untouched; any migration requires an explicit,
+trusted owner assignment. A case ID is an identifier, never an access credential.
+
+The browser retains the existing layout and uses IAP's session for requests and downloads.
+Mutating requests require the exact configured `Origin` and `X-ClaimShield-Request: 1`;
+the UI supplies the latter automatically. Programmatic callers must send these too, along
+with credentials accepted by IAP. The application does not create its own session cookie
+or store tokens in browser storage. Live streams close when their verified assertion expires;
+the UI asks the user to reload to refresh sign-in. Existing jobs continue independently.
+
+The deployment script now validates auth settings, enables native IAP and disables anonymous
+Cloud Run invocation. Before any separately authorized deployment, enable the IAP API, set up
+the OAuth client if needed, grant the IAP service agent Cloud Run Invoker, and configure IAP
+user access. Use `PYTHON` to select an interpreter containing the project dependencies when
+running the script. The script safely transports JSON membership values via an env-vars file.
+These infrastructure prerequisites and the real hosted login flow have not been verified
+against a live project. Local tests use real signatures with synthetic keys and identities.
+
 ## Deploy to Google Cloud
 
 ### Services to enable
@@ -114,6 +205,7 @@ make gcp-setup        # APIs, bucket, BigQuery dataset, service account + roles,
                       # -> prints the .env values; paste them into .env
 make bq-load          # tables + reference pricing into BigQuery
 make index-policies   # sample policies -> GCS -> Vertex AI Search (indexing takes a few minutes)
+# Configure IAP and the authentication values above before deploying; demo mode is rejected.
 make deploy           # Cloud Build + Cloud Run; prints the service URL
 ```
 

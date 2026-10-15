@@ -18,6 +18,12 @@ class LocalStorage:
         path.write_bytes(data)
         return f"file://{path}"
 
+    def create(self, key: str, data: bytes, content_type: str = "application/octet-stream") -> None:
+        path = self.root / key
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("xb") as stream:
+            stream.write(data)
+
     def get(self, key: str) -> bytes:
         return (self.root / key).read_bytes()
 
@@ -37,6 +43,9 @@ class GcsStorage:
     def put(self, key: str, data: bytes, content_type: str = "application/octet-stream") -> str:
         self._bucket.blob(key).upload_from_string(data, content_type=content_type)
         return f"gs://{self._name}/{key}"
+
+    def create(self, key: str, data: bytes, content_type: str = "application/octet-stream") -> None:
+        self._bucket.blob(key).upload_from_string(data, content_type=content_type, if_generation_match=0)
 
     def get(self, key: str) -> bytes:
         return self._bucket.blob(key).download_as_bytes()

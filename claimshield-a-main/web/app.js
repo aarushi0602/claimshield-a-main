@@ -21,10 +21,23 @@ const TYPE_LABEL = {
 
 const state = { billFile: null, policyFile: null, sample: null, samples: null, caseId: null, source: null };
 
+async function apiFetch(url, options = {}) {
+  const response = await fetch(url, {
+    ...options, credentials: "same-origin",
+    headers: { ...options.headers, "X-ClaimShield-Request": "1" },
+  });
+  if (response.status === 401 || response.status === 403 || response.redirected ||
+      (response.headers.get("content-type") || "").includes("text/html")) {
+    state.source?.close();
+    throw new Error("Your session has expired or access was denied. Reload this page to sign in through Google.");
+  }
+  return response;
+}
+
 // ---------------------------------------------------------------- setup
 
 async function init() {
-  const [health, samples] = await Promise.all([fetch("/api/health").then((r) => r.json()), fetch("/api/samples").then((r) => r.json())]);
+  const [health, samples] = await Promise.all([apiFetch("/api/health").then((r) => r.json()), apiFetch("/api/samples").then((r) => r.json())]);
   renderStack(health.stack);
   state.samples = samples;
   renderSamples(samples);
@@ -116,7 +129,11 @@ async function startAudit() {
   $("#audit").textContent = "Starting…";
   let res;
   try {
-    res = await fetch("/api/audit", { method: "POST", body: form });
+    res = await apiFetch("/api/audit", { method: "POST", body: form });
+  } catch (error) {
+    alert(error.message || "Could not reach the audit service. Please retry.");
+    updateReady();
+    return;
   } finally {
     $("#audit").textContent = "Audit";
   }
@@ -148,13 +165,19 @@ function streamTrace(caseId) {
   src.onmessage = (msg) => onEvent(JSON.parse(msg.data));
   src.addEventListener("end", async () => {
     src.close();
-    await loadResults(caseId);
+    try { await loadResults(caseId); } catch (error) { alert(error.message); }
+  });
+  src.addEventListener("auth_expired", () => {
+    src.close();
+    alert("Your session has expired. Reload this page to sign in through Google.");
   });
   src.onerror = () => {
     // EventSource retries on its own. If the case has finished meanwhile, just load it.
-    fetch(`/api/cases/${caseId}`).then((r) => r.json()).then((c) => {
-      if (c.status && c.status !== "running") { src.close(); loadResults(caseId); }
-    });
+    apiFetch(`/api/cases/${caseId}`).then(async (r) => {
+      if (!r.ok) throw new Error("This case is unavailable or you do not have access.");
+      const c = await r.json();
+      if (c.status && c.status !== "running") { src.close(); await loadResults(caseId); }
+    }).catch((error) => { src.close(); alert(error.message); });
   };
 }
 
@@ -177,7 +200,7 @@ function onEvent(e) {
 // ---------------------------------------------------------------- results
 
 async function loadResults(caseId) {
-  const c = await fetch(`/api/cases/${caseId}`).then((r) => r.json());
+  const c = await apiFetch(`/api/cases/${caseId}`).then((r) => r.json());
   $("#results").classList.remove("hidden");
   if (c.status !== "complete") {
     $("#verdict").className = "verdict fail";
@@ -352,4 +375,7 @@ function reset() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-init();
+init().catch((error) => {
+  $("#selection").textContent = error.message || "Could not load the application. Please reload.";
+  $("#audit").disabled = true;
+});
