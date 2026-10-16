@@ -132,7 +132,7 @@ def categorize(dept: str, description: str, known: dict[str, str] | None = None,
 
 def charge_unit(category: str, description: str = "") -> str:
     """Normalize price comparison units so per-day/visit/test prices are never mixed."""
-    return {"ROOM": "per_day", "CONSULT": "per_visit", "LAB": "per_test", "RADIOLOGY": "per_scan",
+    return {"ROOM": "per_day", "ICU": "per_day", "CONSULT": "per_visit", "LAB": "per_test", "RADIOLOGY": "per_scan",
             "PROCEDURE": "per_procedure", "THERAPY": "per_session"}.get(category, "per_item")
 
 
@@ -186,7 +186,8 @@ def normalize_bill(raw: RawDocument, known_categories: dict[str, str] | None = N
         return None
 
     c_no, c_date, c_code, c_desc = col("#", "s.no", "sl"), col("date"), col("code"), col("description", "particular", "item")
-    c_dept, c_qty, c_rate, c_amt = col("dept", "department"), col("qty", "quantity"), col("rate", "unit"), col("amount")
+    c_dept, c_qty, c_rate, c_amt = col("dept", "department"), col("qty", "quantity"), col("rate", "unit rate", "unit price"), col("amount")
+    c_unit = next((i for i, name in enumerate(header) if name in {'unit', 'uom', 'billing unit', 'unit of measure'}), None)
     if c_desc is None or c_qty is None or c_amt is None:
         raise ParseError(f"Itemised table is missing description/qty/amount columns: {header}")
 
@@ -206,7 +207,7 @@ def normalize_bill(raw: RawDocument, known_categories: dict[str, str] | None = N
             line_no=int(no) if no.isdigit() else idx,
             service_date=cells[c_date] if c_date is not None else "",
             code=code, description=cells[c_desc], dept=dept,
-            category=category, unit=charge_unit(category, cells[c_desc]),
+            category=category, unit=cells[c_unit] if c_unit is not None and cells[c_unit] else charge_unit(category, cells[c_desc]),
             qty=qty, unit_price=rate, amount=amount,
             source_page=item_page, source_text=" | ".join(cells),
         ))

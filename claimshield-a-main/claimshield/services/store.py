@@ -132,6 +132,13 @@ class SqliteStore:
     def categories(self) -> dict[str, str]:
         return {r["code"]: r["category"] for r in self.query("categories")}
 
+    def release_case(self, case_id: str) -> None:
+        """Discard transient analytical rows after the HTTP result is persisted."""
+        with self._lock:
+            self._db.execute('DELETE FROM line_items WHERE case_id=?', (case_id,))
+            self._db.execute('DELETE FROM findings WHERE case_id=?', (case_id,))
+            self._db.commit()
+
 
 class BigQueryStore:
     name = "BigQuery"

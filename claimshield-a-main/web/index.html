@@ -16,7 +16,7 @@
         <p>Understand your coverage. Prepare your claim. Know what to do next.</p>
       </div>
     </div>
-    <div id="stack" class="stack" aria-label="Services in use"></div>
+    <details class="service-details"><summary>Processing services</summary><div id="stack" class="stack" aria-label="Services in use"></div></details>
   </header>
 
   <main>
@@ -43,7 +43,7 @@
         <label class="field">Which file contains the main policy wording?<select id="main-policy"><option value="0">Upload insurance documents first</option></select></label>
       </div>
       <label class="field">How are you claiming?<select id="journey-claim-type"><option value="reimbursement">Reimbursement — I paid the hospital</option><option value="cashless">Cashless — insurer pays the hospital</option><option value="day_care">Day care — treatment without an overnight stay</option></select></label>
-      <p class="note">The bill audit uses the selected main bill and policy. Other files are checked for completeness; endorsements and medical eligibility may still need human verification. If you do not have a bill yet, open “Plan treatment” below.</p>
+      <p class="note">The bill audit uses the selected main bill and policy. Supporting medical files feed completeness checks and optional AI clause comparisons. Endorsements and eligibility still need confirmation. If you do not have a bill yet, open “Plan treatment” below.</p>
       <div id="upload-error" class="verdict fail hidden" role="alert"></div>
       <div class="actions">
         <button id="audit" class="primary" disabled>Check my claim</button>
@@ -55,6 +55,111 @@
       </details>
     </section>
 
+    <section id="run" class="panel hidden">
+      <div class="run-head">
+        <h2>Checking your claim</h2>
+        <span id="case-id" class="muted mono"></span>
+      </div>
+      <p id="review-progress" role="status">Your request is queued. You can return using this page’s link.</p>
+      <details><summary>See processing details</summary>
+      <div class="pipeline" id="pipeline">
+        <div class="agent" data-agent="intake_agent"><b>Intake</b><small>Document AI parsing</small></div>
+        <div class="arrow"></div>
+        <div class="agent" data-agent="policy_agent"><b>Policy</b><small>Clause retrieval</small></div>
+        <div class="arrow"></div>
+        <div class="parallel">
+          <div class="agent" data-agent="audit_agent"><b>Audit</b><small>Errors & coverage</small></div>
+          <div class="agent" data-agent="benchmark_agent"><b>Benchmark</b><small>Pricing & coding</small></div>
+        </div>
+        <div class="arrow"></div>
+        <div class="agent" data-agent="reconciliation_agent"><b>Reconciliation</b><small>What you owe</small></div>
+        <div class="arrow"></div>
+        <div class="agent" data-agent="dispute_agent"><b>Dispute</b><small>Letters & report</small></div>
+      </div>
+<ol id="log" class="log" aria-live="polite"></ol></details>
+    </section>
+
+    <section id="results" class="hidden">
+      <div id="claim-review-result" class="panel hidden" aria-live="polite"></div>
+      <div class="panel">
+        <h2>3. What we found</h2>
+        <div id="verdict" class="verdict"></div>
+        <div id="summary" class="summary"></div>
+        <div id="notes"></div>
+      </div>
+
+      <div class="panel" id="findings-panel">
+        <div class="panel-head">
+          <h3>Findings</h3>
+          <label class="small">Evidence <select id="evidence-filter"><option value="all">All findings</option><option value="verified">Verified evidence</option><option value="partial">Partial evidence</option><option value="insufficient">Insufficient evidence</option></select></label>
+          <div class="legend"><span class="pill high">High</span> follows from the bill's own figures or the policy wording &nbsp; <span class="pill review">Worth reviewing</span> may have a legitimate reason, so ask</div>
+        </div>
+        <table class="findings">
+          <thead><tr><th>#</th><th>Finding</th><th>Bill line</th><th>Policy clause</th><th>Evidence</th><th>Confidence</th><th class="num">Amount</th></tr></thead>
+          <tbody id="findings"></tbody>
+        </table>
+      </div>
+
+      <div class="panel hidden" id="healthcare-audit-panel">
+        <h3>Healthcare policy and reference checks</h3>
+        <p class="muted small">Potential adjustments are audit scenarios. CGHS/PM-JAY benchmark variances are shown separately and do not determine insurer liability.</p>
+        <div id="healthcare-audit-summary" class="summary"></div>
+        <div id="healthcare-audit-warnings" role="status"></div>
+        <div class="scroll"><table class="findings"><thead><tr><th>Check / status</th><th>Severity</th><th class="num">Billed</th><th class="num">Reference</th><th class="num">Difference</th><th>Confidence</th><th>Explanation / source</th></tr></thead><tbody id="healthcare-audit-findings"></tbody></table></div>
+      </div>
+
+      <div class="panel" id="benchmark-panel">
+        <h3>Regional charge comparisons</h3>
+        <p class="muted small">Informational price references can identify rates worth reviewing. A high charge alone does not establish fraud, overbilling, or a contractual violation.</p>
+        <div class="scroll"><table class="findings"><thead><tr><th>Charge</th><th>Region / unit</th><th class="num">Billed rate</th><th>Comparison range</th><th>Source / date / version</th><th>Assessment</th></tr></thead><tbody id="benchmark-rows"></tbody></table></div>
+      </div>
+
+      <div class="grid2">
+        <div class="panel">
+          <h3>Itemised bill</h3>
+          <p class="muted small" id="bill-meta"></p>
+          <div class="scroll"><table class="bill"><thead><tr><th>#</th><th>Date</th><th>Description</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead><tbody id="bill-lines"></tbody></table></div>
+        </div>
+        <div class="panel">
+          <h3>How your entitlement was calculated</h3>
+          <p class="muted small">Policy terms applied to the bill after the high-confidence corrections.</p>
+          <table class="calc"><tbody id="calc"></tbody></table>
+          <h3 class="mt">Policy terms used</h3>
+          <ul id="terms" class="terms"></ul>
+        </div>
+      </div>
+
+      <div class="panel" id="letters-panel">
+        <div class="panel-head">
+          <h3>Ready-to-send letters & report</h3>
+          <div id="downloads" class="downloads"></div>
+        </div>
+        <div id="letter-tabs" class="tabs"></div>
+        <pre id="letter" class="letter"></pre>
+      </div>
+
+      <div class="panel" id="timeline-panel">
+        <h3>Claim timeline & next steps</h3>
+        <p class="muted small">Record claim updates and prepare a follow-up draft. Drafts are not submitted to an insurer or external portal.</p>
+        <div id="timeline-status" class="summary"></div>
+        <ol id="claim-timeline" class="claim-timeline"></ol>
+        <div id="pending-actions"></div>
+        <form id="claim-event-form" class="rejection-form">
+          <label class="field">Event<select name="event_type" required><option value="submission">Submission</option><option value="insurer_query">Insurer query</option><option value="document_response">Document response</option><option value="settlement">Settlement</option><option value="rejection">Rejection</option><option value="grievance">Grievance</option><option value="closure">Closure</option></select></label>
+          <label class="field">Date<input name="date" type="date" required></label>
+          <label class="field">Claim status<select name="claim_status" required><option value="submitted">Submitted</option><option value="query_pending">Query pending</option><option value="documents_responded">Documents responded</option><option value="settled">Settled</option><option value="rejected">Rejected</option><option value="grievance_open">Grievance open</option><option value="grievance_resolved">Grievance resolved</option><option value="closed">Closed</option></select></label>
+          <label class="field">Source<input name="source" required maxlength="160" placeholder="e.g. Insurer email"></label>
+          <label class="field">Notes<input name="notes" maxlength="4000"></label>
+          <label class="field">Required supporting documents<input name="required_documents" placeholder="Comma separated"></label>
+          <label class="field">Attach PDF (optional)<input name="attachment" type="file" accept="application/pdf"></label>
+          <div class="actions"><button class="primary" type="submit">Add event</button><button class="secondary" id="draft-follow-up" type="button">Draft follow-up</button><button class="secondary" id="draft-grievance" type="button">Draft grievance letter</button></div>
+        </form>
+        <div id="timeline-error" class="verdict fail hidden" role="alert"></div>
+        <div id="timeline-draft" class="hidden"><h4 id="timeline-draft-subject"></h4><pre class="letter" id="timeline-draft-body"></pre></div>
+      </div>
+
+      <div class="actions center"><button id="again" class="secondary">Audit another bill</button></div>
+    </section>
     <div class="tools-heading"><h2>Help for the next stage</h2><p class="muted">Open only what you need.</p></div>
     <details class="tool-disclosure" data-tool="claim-dashboard-panel"><summary>My claims and settlement history</summary>
     <section class="panel" id="claim-dashboard-panel">
@@ -232,102 +337,6 @@
       <div id="policy-explainer-result" class="hidden" aria-live="polite"></div>
     </section>
     </details>
-    <section id="run" class="panel hidden">
-      <div class="run-head">
-        <h2>Checking your claim</h2>
-        <span id="case-id" class="muted mono"></span>
-      </div>
-      <div class="pipeline" id="pipeline">
-        <div class="agent" data-agent="intake_agent"><b>Intake</b><small>Document AI parsing</small></div>
-        <div class="arrow"></div>
-        <div class="agent" data-agent="policy_agent"><b>Policy</b><small>Clause retrieval</small></div>
-        <div class="arrow"></div>
-        <div class="parallel">
-          <div class="agent" data-agent="audit_agent"><b>Audit</b><small>Errors & coverage</small></div>
-          <div class="agent" data-agent="benchmark_agent"><b>Benchmark</b><small>Pricing & coding</small></div>
-        </div>
-        <div class="arrow"></div>
-        <div class="agent" data-agent="reconciliation_agent"><b>Reconciliation</b><small>What you owe</small></div>
-        <div class="arrow"></div>
-        <div class="agent" data-agent="dispute_agent"><b>Dispute</b><small>Letters & report</small></div>
-      </div>
-      <p id="review-progress" role="status">Your request is queued. You can return using this page’s link.</p>
-      <details><summary>See processing details</summary><ol id="log" class="log" aria-live="polite"></ol></details>
-    </section>
-
-    <section id="results" class="hidden">
-      <div id="claim-review-result" class="panel hidden" aria-live="polite"></div>
-      <div class="panel">
-        <h2>3. What we found</h2>
-        <div id="verdict" class="verdict"></div>
-        <div id="summary" class="summary"></div>
-        <div id="notes"></div>
-      </div>
-
-      <div class="panel" id="findings-panel">
-        <div class="panel-head">
-          <h3>Findings</h3>
-          <label class="small">Evidence <select id="evidence-filter"><option value="all">All findings</option><option value="verified">Verified evidence</option><option value="partial">Partial evidence</option><option value="insufficient">Insufficient evidence</option></select></label>
-          <div class="legend"><span class="pill high">High</span> follows from the bill's own figures or the policy wording &nbsp; <span class="pill review">Worth reviewing</span> may have a legitimate reason, so ask</div>
-        </div>
-        <table class="findings">
-          <thead><tr><th>#</th><th>Finding</th><th>Bill line</th><th>Policy clause</th><th>Evidence</th><th>Confidence</th><th class="num">Amount</th></tr></thead>
-          <tbody id="findings"></tbody>
-        </table>
-      </div>
-
-      <div class="panel" id="benchmark-panel">
-        <h3>Regional charge comparisons</h3>
-        <p class="muted small">Informational price references can identify rates worth reviewing. A high charge alone does not establish fraud, overbilling, or a contractual violation.</p>
-        <div class="scroll"><table class="findings"><thead><tr><th>Charge</th><th>Region / unit</th><th class="num">Billed rate</th><th>Comparison range</th><th>Source / date / version</th><th>Assessment</th></tr></thead><tbody id="benchmark-rows"></tbody></table></div>
-      </div>
-
-      <div class="grid2">
-        <div class="panel">
-          <h3>Itemised bill</h3>
-          <p class="muted small" id="bill-meta"></p>
-          <div class="scroll"><table class="bill"><thead><tr><th>#</th><th>Date</th><th>Description</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead><tbody id="bill-lines"></tbody></table></div>
-        </div>
-        <div class="panel">
-          <h3>How your entitlement was calculated</h3>
-          <p class="muted small">Policy terms applied to the bill after the high-confidence corrections.</p>
-          <table class="calc"><tbody id="calc"></tbody></table>
-          <h3 class="mt">Policy terms used</h3>
-          <ul id="terms" class="terms"></ul>
-        </div>
-      </div>
-
-      <div class="panel" id="letters-panel">
-        <div class="panel-head">
-          <h3>Ready-to-send letters & report</h3>
-          <div id="downloads" class="downloads"></div>
-        </div>
-        <div id="letter-tabs" class="tabs"></div>
-        <pre id="letter" class="letter"></pre>
-      </div>
-
-      <div class="panel" id="timeline-panel">
-        <h3>Claim timeline & next steps</h3>
-        <p class="muted small">Record claim updates and prepare a follow-up draft. Drafts are not submitted to an insurer or external portal.</p>
-        <div id="timeline-status" class="summary"></div>
-        <ol id="claim-timeline" class="claim-timeline"></ol>
-        <div id="pending-actions"></div>
-        <form id="claim-event-form" class="rejection-form">
-          <label class="field">Event<select name="event_type" required><option value="submission">Submission</option><option value="insurer_query">Insurer query</option><option value="document_response">Document response</option><option value="settlement">Settlement</option><option value="rejection">Rejection</option><option value="grievance">Grievance</option><option value="closure">Closure</option></select></label>
-          <label class="field">Date<input name="date" type="date" required></label>
-          <label class="field">Claim status<select name="claim_status" required><option value="submitted">Submitted</option><option value="query_pending">Query pending</option><option value="documents_responded">Documents responded</option><option value="settled">Settled</option><option value="rejected">Rejected</option><option value="grievance_open">Grievance open</option><option value="grievance_resolved">Grievance resolved</option><option value="closed">Closed</option></select></label>
-          <label class="field">Source<input name="source" required maxlength="160" placeholder="e.g. Insurer email"></label>
-          <label class="field">Notes<input name="notes" maxlength="4000"></label>
-          <label class="field">Required supporting documents<input name="required_documents" placeholder="Comma separated"></label>
-          <label class="field">Attach PDF (optional)<input name="attachment" type="file" accept="application/pdf"></label>
-          <div class="actions"><button class="primary" type="submit">Add event</button><button class="secondary" id="draft-follow-up" type="button">Draft follow-up</button><button class="secondary" id="draft-grievance" type="button">Draft grievance letter</button></div>
-        </form>
-        <div id="timeline-error" class="verdict fail hidden" role="alert"></div>
-        <div id="timeline-draft" class="hidden"><h4 id="timeline-draft-subject"></h4><pre class="letter" id="timeline-draft-body"></pre></div>
-      </div>
-
-      <div class="actions center"><button id="again" class="secondary">Audit another bill</button></div>
-    </section>
   </main>
 
   <footer>

@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 import os
 import tempfile
+import threading
 
 
 class LocalStorage:
@@ -12,9 +13,14 @@ class LocalStorage:
 
     def __init__(self, root: Path) -> None:
         self.root = root
+        self._lock = threading.RLock()
         root.mkdir(parents=True, exist_ok=True)
 
     def put(self, key: str, data: bytes, content_type: str = "application/octet-stream") -> str:
+        with self._lock:
+            return self._put(key, data)
+
+    def _put(self, key: str, data: bytes) -> str:
         path = self.root / key
         path.parent.mkdir(parents=True, exist_ok=True)
         descriptor, temporary = tempfile.mkstemp(dir=path.parent, prefix='.writing-')
@@ -28,16 +34,19 @@ class LocalStorage:
         return f"file://{path}"
 
     def create(self, key: str, data: bytes, content_type: str = "application/octet-stream") -> None:
-        path = self.root / key
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with path.open("xb") as stream:
-            stream.write(data)
+        with self._lock:
+            path = self.root / key
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open("xb") as stream:
+                stream.write(data)
 
     def get(self, key: str) -> bytes:
-        return (self.root / key).read_bytes()
+        with self._lock:
+            return (self.root / key).read_bytes()
 
     def exists(self, key: str) -> bool:
-        return (self.root / key).exists()
+        with self._lock:
+            return (self.root / key).exists()
 
 
 class GcsStorage:

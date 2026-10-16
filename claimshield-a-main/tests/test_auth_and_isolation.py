@@ -152,7 +152,9 @@ def test_authenticated_upload_persists_ownership_before_processing(identity, mon
     async def checked_run(case_id, *args, **kwargs):
         owner = json.loads(storage.get(f"cases/{case_id}/owner.json"))
         assert owner["owner_id"] == ALICE and owner["tenant_id"] == "tenant-a"
-        assert kwargs == {"owner_id": ALICE, "tenant_id": "tenant-a"}
+        assert kwargs['owner_id'] == ALICE and kwargs['tenant_id'] == 'tenant-a'
+        assert kwargs['analysis_case_id'].startswith(case_id + '-attempt-')
+        assert set(kwargs) == {'owner_id', 'tenant_id', 'analysis_case_id'}
         return await original(case_id, *args, **kwargs)
 
     monkeypatch.setattr(main, "run_audit", checked_run)

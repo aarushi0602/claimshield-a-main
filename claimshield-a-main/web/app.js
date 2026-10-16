@@ -746,6 +746,7 @@ async function loadResults(caseId) {
   const c = await apiFetch(`/api/cases/${caseId}`).then((r) => r.json());
   $("#results").classList.remove("hidden");
   renderClaimReview(c.claim_review);
+  renderHealthcareAudit(c.healthcare_audit);
   $('#review-progress').textContent = c.status === 'complete' ? 'Review complete. Your results are below.' : 'Review could not finish. See details below.';
   if (c.status !== "complete") {
     $("#verdict").className = "verdict fail";
@@ -767,9 +768,49 @@ async function loadResults(caseId) {
   $("#results").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function renderHealthcareAudit(report) {
+  const panel = $('#healthcare-audit-panel');
+  const available = Boolean(report && report.finding_counts);
+  panel.classList.toggle('hidden', !available);
+  if (!available) {
+    $('#healthcare-audit-summary').innerHTML = '';
+    $('#healthcare-audit-warnings').innerHTML = '';
+    $('#healthcare-audit-findings').innerHTML = '';
+    return;
+  }
+  const amount = value => typeof value === 'number' && Number.isFinite(value) ? inr(value) : 'Not determined';
+  const counts = report.finding_counts;
+  $('#healthcare-audit-summary').innerHTML = [
+    ['Billed total', amount(report.total_billed)], ['Potential adjustment scenario', amount(report.potential_discrepancy)],
+    ['Benchmark variance · separate', amount(report.benchmark_variance)],
+    ['Clear checks', counts.clear ?? 0], ['Flagged checks', counts.flagged ?? 0], ['Needs review', counts.needs_review ?? 0],
+  ].map(([label, value]) => `<div class="card"><div class="label">${esc(label)}</div><div class="value">${esc(value)}</div></div>`).join('');
+  $('#healthcare-audit-warnings').innerHTML = (report.warnings || []).map(warning => `<p class="note">${esc(warning)}</p>`).join('');
+  $('#healthcare-audit-findings').innerHTML = (report.findings || []).map(finding => {
+    const source = finding.evidence?.source;
+    const status = String(finding.status || 'needs_review').replaceAll('_', ' ');
+    const sourceText = source ? `<b>${esc(source.source_name)}</b><br>Source status: ${esc(source.verification_status || 'unverified')}<br>Page: ${esc(source.page_number ?? 'Unavailable')} · Effective: ${esc(source.effective_date ?? 'Unavailable')}<br>Version: ${esc(source.version ?? 'Unavailable')}${source.source_url ? `<br>${esc(source.source_url)}` : ''}${source.source_quote || finding.policy?.quote ? `<blockquote>${esc(source.source_quote || finding.policy.quote)}</blockquote>` : ''}` : 'Source unavailable; no verified reference is inferred.';
+    return `<tr><td><b>${esc(finding.title || finding.rule_name)}</b><br>${esc(finding.type)}<br><span class="pill ${finding.status === 'clear' ? 'high' : 'review'}">${esc(status)}</span></td><td>${esc(finding.severity || 'warning')}</td><td class="num">${esc(amount(finding.billed_amount))}</td><td class="num">${esc(amount(finding.reference_amount))}</td><td class="num">${esc(amount(finding.status === 'needs_review' ? null : finding.potential_difference))}</td><td>${esc(finding.confidence)}${typeof finding.confidence_score === 'number' ? `<br>${esc(finding.confidence_score.toFixed(2))} · check confidence` : ''}</td><td>${esc(finding.explanation)}<details><summary>Source and calculation</summary><div>${sourceText}</div><pre class="small">${esc(JSON.stringify(finding.evidence || {}, null, 2))}</pre></details></td></tr>`;
+  }).join('') || '<tr><td colspan="7">No item-level checks are available. Review the warnings above.</td></tr>';
+}
+
 function openClaimTool(id) {
   const target = document.getElementById(id);
   if (!target) return;
+  // Reuse the files already selected in this tab; do not make the user upload twice.
+  const mainPolicy = state.policyFiles[Number($('#main-policy').value)];
+  if (typeof DataTransfer !== 'undefined') {
+    const setFiles = (input, files) => {
+      if (!input || input.files.length || !files.length) return;
+      const transfer = new DataTransfer();
+      files.forEach(file => transfer.items.add(file));
+      input.files = transfer.files;
+      input.dispatchEvent(new Event('change', {bubbles: true}));
+    };
+    if (mainPolicy) setFiles(target.querySelector('input[type=file][name=policy]'), [mainPolicy]);
+    if (id === 'document-check-panel') setFiles(target.querySelector('input[type=file]'), [...state.billFiles, ...state.policyFiles]);
+    if (id === 'policy-history-panel') setFiles(target.querySelector('input[type=file]'), state.policyFiles);
+  }
   const disclosure = target.closest('details');
   if (disclosure) disclosure.open = true;
   target.scrollIntoView({behavior: 'smooth', block: 'start'});
@@ -780,12 +821,15 @@ function renderClaimReview(review) {
   target.classList.toggle('hidden', !review);
   if (!review) { target.innerHTML = ''; return; }
   const check = review.document_check;
+  const ai = review.ai_clause_review || {mode: 'unavailable', proposals: [], notice: 'AI clause comparison unavailable.'};
+  const aiLabels = {potentially_eligible: 'Potentially eligible under this clause', potentially_ineligible: 'Potentially excluded under this clause', needs_verification: 'More evidence needed'};
   target.innerHTML = `<p class="eyebrow">YOUR CLAIM REVIEW</p><h2>${esc(review.headline)}</h2>
     <p class="note">${esc(review.notice)}</p>
     <div class="summary"><div class="card"><div class="label">Eligibility</div><b>Needs verification</b><p>Unresolved checks are not a rejection.</p></div><div class="card"><div class="label">Policy clauses extracted</div><b>${review.clause_count}</b><p>Each clause is listed below.</p></div><div class="card"><div class="label">Document checklist</div><b>${check.summary.missing} missing · ${check.summary.uncertain} to check</b><p>Generic recommendations, unless a verified insurer source is shown.</p></div></div>
-    <h3>What to do next</h3><ol class="next-actions">${review.next_steps.map(action => `<li><span class="pill review">${esc(action.priority)}</span><h4>${esc(action.title)}</h4><p>${esc(action.detail)}</p><small>${esc(action.basis)}</small> <button type="button" class="secondary" data-open-tool="${esc(action.tool)}">Open related tool</button></li>`).join('')}</ol>
+    <h3>Start with these actions</h3><ol class="next-actions">${review.next_steps.slice(0, 3).map(action => `<li><span class="pill review">${esc(action.priority)}</span><h4>${esc(action.title)}</h4><p>${esc(action.detail)}</p><small>${esc(action.basis)}</small> <button type="button" class="secondary" data-open-tool="${esc(action.tool)}">Open related tool</button></li>`).join('')}</ol><details><summary>See the full action plan</summary><ol class="next-actions" start="4">${review.next_steps.slice(3).map(action => `<li><span class="pill review">${esc(action.priority)}</span><h4>${esc(action.title)}</h4><p>${esc(action.detail)}</p><small>${esc(action.basis)}</small> <button type="button" class="secondary" data-open-tool="${esc(action.tool)}">Open related tool</button></li>`).join('')}</ol></details>
     <details><summary>Documents received and missing evidence</summary>${check.documents.map(doc => `<article class="review-case"><b>${esc(doc.filename)}</b> · ${esc(doc.type_label)}<p>${esc(doc.reason)}</p>${doc.fields_not_detected.length ? `<small>Check these fields: ${esc(doc.fields_not_detected.join(', '))}</small>` : ''}</article>`).join('')}<ul>${check.checklist.map(item => `<li><b>${esc(item.label)}</b>: ${esc(item.status)} · ${esc(item.requirement_kind)}</li>`).join('')}</ul></details>
     <details><summary>Review every extracted policy clause (${review.clause_count})</summary><p class="muted">Extraction may miss unnumbered clauses, schedules or scans. Check the original wording. A clause listed here is not automatically satisfied.</p>${review.clauses.map(clause => `<article class="review-case"><h4>${esc(clause.clause_id)} · ${esc(clause.title)}</h4><span class="pill review">${clause.status === 'review_finding' ? 'Finding to review' : 'Needs verification'}</span><p>${esc(clause.explanation)}</p><blockquote>${esc(clause.text)}</blockquote><small>${esc(clause.source)} · Page ${esc(clause.page)}</small><p>${esc(clause.next_step)}</p></article>`).join('')}</details>
+    <details><summary>Medical evidence compared with policy clauses · ${ai.proposals.length} AI drafts</summary><p class="note">${esc(ai.notice)}</p>${ai.proposals.map(draft => `<article class="review-case"><h4>Clause ${esc(draft.clause_id)} · ${esc(aiLabels[draft.assessment] || 'Needs verification')}</h4><span class="pill review">Unconfirmed AI draft</span><p>${esc(draft.explanation)}</p><b>Policy evidence</b><blockquote>${esc(draft.policy_quote)}</blockquote>${draft.evidence.map(citation => `<b>${esc(citation.filename)} · Page ${esc(citation.page)}</b><blockquote>${esc(citation.quote)}</blockquote>`).join('')}${draft.missing_information.length ? `<p>Still needed: ${draft.missing_information.map(esc).join('; ')}</p>` : ''}</article>`).join('')}</details>
     <details><summary>Expense coverage checks</summary><ul>${review.expenses.map(line => `<li>Line ${line.line_no}: ${esc(line.description)} — ${line.status === 'potentially_non_payable' ? 'Potentially non-payable under the extracted terms; verify exclusions' : 'Eligibility needs verification'}</li>`).join('')}</ul></details>`;
   target.querySelectorAll('[data-open-tool]').forEach(button => button.addEventListener('click', () => openClaimTool(button.dataset.openTool)));
 }
@@ -852,19 +896,19 @@ function renderSummary(c) {
   const v = $("#verdict");
   if (!c.findings.length) {
     v.className = "verdict good";
-    v.innerHTML = `<b>Nothing worth disputing.</b> The itemised bill adds up, no charge stood out against reference pricing, and the insurer's settlement matches your policy. You were correctly asked to pay ${inr(r.patient_paid)}.`;
+    v.innerHTML = `<b>No discrepancies found by the supported bill checks.</b> This does not confirm eligibility or rule out issues in clauses the system could not evaluate. Recorded patient amount: ${inr(r.patient_paid)}.`;
   } else {
     const high = c.findings.filter((f) => f.confidence === "High").length;
     v.className = "verdict money";
     v.innerHTML = `<b>${c.findings.length} item${c.findings.length > 1 ? "s" : ""} worth disputing</b> (${high} high-confidence). ` +
-      `You paid ${inr(r.patient_paid)}; under your policy you should owe <b>${inr(r.fair_patient_payable_high)}</b>.`;
+      `Recorded patient amount: ${inr(r.patient_paid)}. Under the extracted terms and audit assumptions, the patient share would be <b>${inr(r.fair_patient_payable_high)}</b>. Confirm unresolved eligibility checks before relying on this scenario.`;
   }
   const cards = [
     ["Billed by hospital", inr(r.billed_gross), ""],
-    ["Insurer paid", inr(r.insurer_paid), ""],
-    ["You paid", inr(r.patient_paid), ""],
-    ["You should owe", inr(r.fair_patient_payable_high), "under your policy"],
-    ["Likely recovery", inr(r.recovery_likely), r.recovery_upper > r.recovery_likely + 0.5 ? `up to ${inr(r.recovery_upper)} incl. items worth reviewing` : "high-confidence items", "hero"],
+    ["Recorded insurer amount", inr(r.insurer_paid), "Check against the settlement statement"],
+    ["Recorded patient amount", inr(r.patient_paid), "Not proof of payment"],
+    ["Estimated patient share", inr(r.fair_patient_payable_high), "subject to coverage verification"],
+    ["Potential recovery", inr(r.recovery_likely), r.recovery_upper > r.recovery_likely + 0.5 ? `scenario up to ${inr(r.recovery_upper)} including review items; not guaranteed` : "audit scenario, not guaranteed", "hero"],
     ["Hospital overcharges", inr(r.hospital_overcharge_high), r.hospital_overcharge_all > r.hospital_overcharge_high + 0.5 ? `up to ${inr(r.hospital_overcharge_all)}` : "high confidence"],
     ["Insurer shortfall", inr(r.insurer_shortfall), "vs your policy"],
   ];

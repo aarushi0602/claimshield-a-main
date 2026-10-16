@@ -20,8 +20,9 @@ from ..models import (Bill, Clause, Finding, FindingType, Letter, PolicyCitation
 from ..money import inr
 from ..services import Services
 from ..services.llm import merge_terms
-from ..services.parsing import ParseError, categorize, normalize_bill, normalize_policy, policy_document_identity
+from ..services.parsing import ParseError, categorize, charge_unit, normalize_bill, normalize_policy, policy_document_identity
 from ..services.finding_evidence import attach_finding_evidence
+from ..services.healthcare_audit import audit_from_state
 from ..trace import Trace
 
 Step = Callable[[dict[str, Any], Trace, Services], dict[str, Any]]
@@ -94,6 +95,8 @@ def intake_step(state: dict[str, Any], trace: Trace, svc: Services) -> dict[str,
         bill = Bill.model_validate({**data, "parser": svc.llm.name})
         for li in bill.line_items:
             li.category = categorize(li.dept, li.description, known, li.code)  # type: ignore[assignment]
+            if 'unit' not in li.model_fields_set:
+                li.unit = charge_unit(li.category, li.description)
     trace.emit(
         agent, "result",
         f"Bill: {bill.hospital} - {len(bill.line_items)} line items, {len(bill.deductions)} insurer deductions, "
@@ -110,7 +113,7 @@ def intake_step(state: dict[str, Any], trace: Trace, svc: Services) -> dict[str,
     if bill.policy_number and policy.policy_number and bill.policy_number != policy.policy_number:
         trace.emit(agent, "warn", f"Bill quotes policy {bill.policy_number} but the uploaded policy is {policy.policy_number}")
 
-    n = svc.store.load_case(state["case_id"], bill)
+    n = svc.store.load_case(state.get('analysis_case_id', state['case_id']), bill)
     trace.emit(agent, "tool", f"{svc.store.name}: loaded {n} rows into line_items for case {state['case_id']}")
     return {"bill": bill.model_dump(), "policy_doc": policy.model_dump()}
 
@@ -190,7 +193,7 @@ def policy_step(state: dict[str, Any], trace: Trace, svc: Services) -> dict[str,
 def audit_step(state: dict[str, Any], trace: Trace, svc: Services) -> dict[str, Any]:
     agent = "audit_agent"
     bill, terms, cite = _bill(state), _terms(state), _cite_fn(state)
-    case_id = state["case_id"]
+    case_id = state.get('analysis_case_id', state['case_id'])
     next_id = _ids("A")
     findings: list[Finding] = []
     by_line = {li.line_no: li for li in bill.line_items}
@@ -308,7 +311,7 @@ def audit_step(state: dict[str, Any], trace: Trace, svc: Services) -> dict[str, 
 def benchmark_step(state: dict[str, Any], trace: Trace, svc: Services) -> dict[str, Any]:
     agent = "benchmark_agent"
     bill, cite = _bill(state), _cite_fn(state)
-    case_id = state["case_id"]
+    case_id = state.get('analysis_case_id', state['case_id'])
     next_id = _ids("B")
     findings: list[Finding] = []
     trace.emit(agent, "start", "Comparing charges against reference pricing and typical coding")
@@ -448,7 +451,7 @@ def reconciliation_step(state: dict[str, Any], trace: Trace, svc: Services) -> d
         recovery_likely=likely, recovery_upper=upper, entitlement_as_billed=as_billed, entitlement_fair=fair_hi, notes=notes,
     )
     try:
-        svc.store.save_findings(state["case_id"], findings)
+        svc.store.save_findings(state.get('analysis_case_id', state['case_id']), findings)
         trace.emit(agent, "tool", f"{svc.store.name}: wrote {len(findings)} finding(s) to the findings table")
     except Exception as exc:  # noqa: BLE001 - persistence is best-effort; the case record still has them
         trace.emit(agent, "warn", f"Could not persist findings ({type(exc).__name__})")
@@ -457,7 +460,11 @@ def reconciliation_step(state: dict[str, Any], trace: Trace, svc: Services) -> d
         f"You paid {inr(paid_by_patient)}; under the policy you should owe {inr(fair_hi.patient_payable)}. "
         f"Likely recovery {inr(likely)}" + (f", up to {inr(upper)} if the 'worth reviewing' items hold" if upper > likely + 0.5 else ""),
     )
-    return {"findings": [f.model_dump(mode="json") for f in findings], "reconciliation": rec.model_dump(mode="json")}
+    healthcare = audit_from_state(state, svc)
+    trace.emit(agent, 'info', 'Healthcare source checks completed; benchmark variances remain separate from settlement recovery',
+               finding_counts=healthcare['finding_counts'])
+    return {"findings": [f.model_dump(mode="json") for f in findings], "reconciliation": rec.model_dump(mode="json"),
+            'healthcare_audit': healthcare}
 
 
 # ---------------------------------------------------------------------------------------

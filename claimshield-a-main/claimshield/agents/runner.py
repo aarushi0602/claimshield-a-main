@@ -62,14 +62,18 @@ async def _run_plain(initial: dict[str, Any], trace: Trace) -> dict[str, Any]:
 
 
 async def run_audit(case_id: str, bill_key: str, policy_key: str, bill_name: str, policy_name: str,
-                    *, owner_id: str = "local-cli", tenant_id: str = "local-cli") -> dict[str, Any]:
+                    *, owner_id: str = "local-cli", tenant_id: str = "local-cli",
+                    analysis_case_id: str | None = None, claim_context: str | None = None) -> dict[str, Any]:
     svc = get_services()
     trace = TRACES.get(case_id)
     trace.emit("orchestrator", "start", "ClaimShield audit started", stack=svc.describe())
     for w in svc.warnings:
         trace.emit("orchestrator", "warn", w)
     initial = {"case_id": case_id, "bill_key": bill_key, "policy_key": policy_key, "bill_name": bill_name,
-               "policy_name": policy_name, "owner_id": owner_id, "tenant_id": tenant_id}
+               "policy_name": policy_name, "owner_id": owner_id, "tenant_id": tenant_id,
+               "analysis_case_id": analysis_case_id or case_id}
+    if claim_context:
+        initial['claim_context'] = claim_context
     try:
         use_adk = svc.settings.use_adk
         if use_adk:

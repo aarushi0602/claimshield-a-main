@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 from datetime import date
 from enum import Enum
@@ -15,13 +16,25 @@ from typing import Any
 from urllib.parse import urlparse
 
 from fastapi import HTTPException
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+from ..domain.medical_matching import normalize_description
+from ..models import Category
 
 
 IRDAI_HEALTH_CIRCULARS = "https://irdai.gov.in/circulars?filterDepartment=HLT&filtersApplied=true"
 MAX_REGULATORY_PDF_BYTES = 15 * 1024 * 1024
 MAX_REGULATORY_PDF_PAGES = 500
 MAX_REGULATORY_EXTRACTED_CHARS = 8 * 1024 * 1024
+
+
+def source_restricted_to_demo(*, synthetic=False, source_url=None, reviewer=None):
+    """Explicit fixture markers and local-demo approvals cannot become production evidence."""
+    try:
+        host = urlparse(source_url or '').hostname or ''
+    except ValueError:
+        return True
+    marked = synthetic or host == 'invalid' or host.endswith('.invalid') or reviewer == 'local-demo'
+    return bool(marked and os.getenv('CLAIMSHIELD_AUTH_MODE', 'iap').strip().lower() != 'demo')
 
 
 class ReviewStatus(str, Enum):
@@ -72,6 +85,15 @@ class RuleApplicability(BaseModel):
     policy_types: list[str] = Field(default_factory=list)
 
 
+class RegulatoryItemRule(BaseModel):
+    """Human-reviewed interpretation of an exact quotation, never LLM activation."""
+    model_config = ConfigDict(extra='forbid')
+    canonical_description: str = Field(min_length=2, max_length=300)
+    aliases: list[str] = Field(default_factory=list, max_length=30)
+    categories: list[Category] = Field(default_factory=list)
+    effect: str = Field(default='policy_dependent', pattern=r'^(non_payable|policy_dependent)$')
+
+
 class RegulatoryRule(BaseModel):
     rule_id: str
     rule_title: str
@@ -93,6 +115,8 @@ class RegulatoryRule(BaseModel):
     reviewer_explanation: str = ""
     reviewed_by: str | None = None
     reviewed_at: date | None = None
+    item_rule: RegulatoryItemRule | None = None
+    synthetic: bool = False
 
     @model_validator(mode="after")
     def require_disable_until_review(self):
@@ -161,7 +185,8 @@ class RegulatoryRegistry:
         if not self.storage.exists(self.REGISTRY_KEY):
             return self._seed()
         data = json.loads(self.storage.get(self.REGISTRY_KEY))
-        if data.get("schema_version") != 1:
+        if (not isinstance(data, dict) or data.get('schema_version') != 1
+                or not isinstance(data.get('documents'), dict) or not isinstance(data.get('rules'), dict)):
             raise ValueError("unsupported regulatory registry schema")
         return data
 
@@ -267,6 +292,8 @@ class RegulatoryRegistry:
                 raise HTTPException(404, "Regulatory rule not found")
             rule = RegulatoryRule.model_validate(stored)
             if review.human_review_status == ReviewStatus.APPROVED:
+                if source_restricted_to_demo(synthetic=rule.synthetic):
+                    raise HTTPException(409, 'Synthetic regulatory rules may only be reviewed in local demo mode')
                 doc = self.get_document(rule.source_document_id)
                 if doc.human_review_status != ReviewStatus.APPROVED:
                     raise HTTPException(409, "Source document must be human-reviewed before its rule can be approved")
@@ -274,6 +301,12 @@ class RegulatoryRegistry:
                     raise HTTPException(409, "Rule citation no longer matches the selected source document")
                 if rule.effective_date is None:
                     raise HTTPException(409, "A rule without a verified effective date cannot be approved")
+                if rule.item_rule:
+                    quote = ' ' + normalize_description(rule.source_quote) + ' '
+                    labels = [rule.item_rule.canonical_description, *rule.item_rule.aliases]
+                    if any(not normalize_description(label) or ' ' + normalize_description(label) + ' ' not in quote
+                           for label in labels):
+                        raise HTTPException(409, 'Item names and aliases must appear explicitly in the reviewed source quotation')
             rule.human_review_status = review.human_review_status
             rule.enforcement_enabled = review.enforcement_enabled
             rule.reviewer_explanation = review.reviewer_explanation
@@ -330,6 +363,8 @@ class RegulatoryRegistry:
             rule = RegulatoryRule.model_validate(raw)
             rules = [RegulatoryRule.model_validate(v) for v in data["rules"].values()]
             status, reasons = evaluate_applicability(rule, context, rules)
+            if source_restricted_to_demo(synthetic=rule.synthetic, reviewer=rule.reviewed_by):
+                status, reasons = 'Undetermined', ['Synthetic or local-demo evidence cannot be used in production.']
             doc = RegulatoryDocument.model_validate(data["documents"][rule.source_document_id])
             return {"rule_id": rule.rule_id, "status": status, "reasons": reasons,
                     "human_review_status": rule.human_review_status.value,
@@ -338,6 +373,28 @@ class RegulatoryRegistry:
                     "source_citation": rule.source_citation, "source_page": rule.source_page,
                     "source_paragraph": rule.source_paragraph,
                     "assessment_kind": "applicability_only_not_a_violation_determination"}
+
+    def item_rules(self, context: ApplicabilityRequest):
+        """Recheck document approval and citations at use time, including revoked sources."""
+        rules = self.list_rules()
+        result = []
+        for rule in rules:
+            if rule.item_rule is None:
+                continue
+            document = self.get_document(rule.source_document_id)
+            status, reasons = evaluate_applicability(rule, context, rules)
+            if source_restricted_to_demo(synthetic=rule.synthetic, reviewer=rule.reviewed_by):
+                status, reasons = 'Undetermined', ['Synthetic or local-demo evidence cannot be used in production.']
+            if (document.human_review_status != ReviewStatus.APPROVED or not document.currentness_checked
+                    or not document.sha256 or not _citation_matches(self.storage, document, rule)):
+                status, reasons = 'Undetermined', ['Source document or citation is not currently verified.']
+            if status == 'Applicable':
+                try:
+                    self.original_pdf(document.document_id)  # Verify stored source integrity.
+                except (HTTPException, OSError):
+                    status, reasons = 'Undetermined', ['Original source integrity could not be verified.']
+            result.append((rule, document, status, reasons))
+        return result
 
 
 def evaluate_applicability(rule: RegulatoryRule, context: ApplicabilityRequest,
@@ -429,5 +486,11 @@ def _norm(text: str) -> str:
 def _citation_matches(storage, document: RegulatoryDocument, rule: RegulatoryRule) -> bool:
     if not document.extracted_text_ref or rule.source_page is None:
         return False
-    pages = json.loads(storage.get(document.extracted_text_ref)).get("pages", [])
-    return 1 <= rule.source_page <= len(pages) and _norm(rule.source_quote) in _norm(pages[rule.source_page - 1])
+    try:
+        extracted = json.loads(storage.get(document.extracted_text_ref))
+        pages = extracted.get('pages') if isinstance(extracted, dict) else None
+        return bool(isinstance(pages, list) and all(isinstance(page, str) for page in pages)
+                    and 1 <= rule.source_page <= len(pages)
+                    and _norm(rule.source_quote) in _norm(pages[rule.source_page - 1]))
+    except (OSError, ValueError, TypeError):
+        return False

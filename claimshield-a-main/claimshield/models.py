@@ -30,6 +30,12 @@ class LineItem(BaseModel):
     amount: float
     source_page: Optional[int] = None
     source_text: str = ""
+    normalized_description: str = ""
+    strength: str = ""
+    dosage_form: str = ""
+    pack_size: str = ""
+    manufacturer: str = ""
+    price_basis: Literal['unknown', 'net_excluding_tax', 'tax_inclusive'] = 'unknown'
 
 
 class Deduction(BaseModel):
@@ -58,6 +64,10 @@ class Bill(BaseModel):
     insurer_approved: float = 0.0
     patient_payable: float = 0.0
     parser: str = ""
+    facility_category: str = ""
+    room_category: str = ""
+    admission_days: Optional[float] = None
+    actual_room_rent_per_day: Optional[float] = None
 
     @property
     def nights(self) -> int:
@@ -114,6 +124,8 @@ class PolicyTerms(BaseModel):
     clause_refs: dict[str, str] = Field(default_factory=dict)
     extraction: str = "rules"
     uncertain_topics: list[str] = Field(default_factory=list)
+    room_rent_limit_type: Optional[Literal['per_day', 'percent_sum_insured_per_day', 'category', 'unknown']] = None
+    room_rent_limit_pct: Optional[float] = None
 
 
 class FindingType(str, Enum):
@@ -125,6 +137,11 @@ class FindingType(str, Enum):
     PRICE_OUTLIER = "PRICE_OUTLIER"
     COVERAGE_MISMATCH = "COVERAGE_MISMATCH"
     CLINICAL_REVIEW = "CLINICAL_REVIEW"
+    NON_PAYABLE_ITEM = 'NON_PAYABLE_ITEM'
+    ROOM_RENT_LIMIT = 'ROOM_RENT_LIMIT'
+    ROOM_RENT_PROPORTIONATE = 'ROOM_RENT_PROPORTIONATE'
+    HEALTHCARE_BENCHMARK = 'HEALTHCARE_BENCHMARK'
+    NPPA_REFERENCE = 'NPPA_REFERENCE'
 
 
 FINDING_LABELS = {
@@ -136,6 +153,11 @@ FINDING_LABELS = {
     FindingType.PRICE_OUTLIER: "Priced above benchmark",
     FindingType.COVERAGE_MISMATCH: "Settled differently from policy",
     FindingType.CLINICAL_REVIEW: "Clinical consistency question",
+    FindingType.NON_PAYABLE_ITEM: 'Non-payable item reference check',
+    FindingType.ROOM_RENT_LIMIT: 'Room-rent daily limit',
+    FindingType.ROOM_RENT_PROPORTIONATE: 'Policy-configured proportionate adjustment',
+    FindingType.HEALTHCARE_BENCHMARK: 'Healthcare benchmark comparison',
+    FindingType.NPPA_REFERENCE: 'NPPA reference comparison',
 }
 
 

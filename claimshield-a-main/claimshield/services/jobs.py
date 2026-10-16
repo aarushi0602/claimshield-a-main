@@ -26,6 +26,7 @@ class JobQueue:
                 id TEXT PRIMARY KEY, owner TEXT NOT NULL, payload TEXT NOT NULL,
                 status TEXT NOT NULL, created REAL NOT NULL, available REAL NOT NULL,
                 lease REAL NOT NULL DEFAULT 0, token TEXT, attempts INTEGER NOT NULL DEFAULT 0)""")
+            db.execute('CREATE INDEX IF NOT EXISTS jobs_pending ON jobs(status, available, created)')
 
     @contextmanager
     def connect(self):

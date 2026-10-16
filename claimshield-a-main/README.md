@@ -335,3 +335,7 @@ You can turn services on one at a time, e.g. only `CLAIMSHIELD_USE_GEMINI=true`,
 - The local parser expects an itemised table with Qty and Amount columns. With Gemini on, unfamiliar layouts are transcribed by Gemini instead.
 - Benchmarks and procedure tiers are a small synthetic table. A real deployment would use regional tariff data such as PM-JAY/CGHS package rates.
 - Scaling beyond the demo: the live trace lives in instance memory, so the deploy pins one instance with session affinity. To scale, move traces to Firestore or Pub/Sub, and the audit itself to Cloud Run Jobs or Cloud Tasks.
+
+## Guided two-group claim review
+
+The main page now accepts medical documents and insurance documents together, identifies missing evidence, lists every extracted policy clause, and prioritizes next actions. Audit and guided-review requests use a bounded persistent single-host queue. See [claim review behavior, feature boundaries, and capacity guidance](docs/CLAIM_REVIEW.md). This does not yet establish full claim eligibility or provide horizontally scaled cloud processing.

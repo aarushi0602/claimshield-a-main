@@ -34,8 +34,11 @@ from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse, Res
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 
 from ..agents.runner import run_audit  # noqa: E402
-from ..agents.claim_review import document_agent, guidance_agent
+from ..agents.claim_review import document_agent, guidance_agent, clause_review_agent
 from ..services.jobs import JobQueue, QueueFull
+from ..domain.healthcare_audit import HealthcareAuditInput, HealthcareFinding
+from ..services.healthcare_audit import run_healthcare_audit
+from ..services.healthcare_references import HealthcareReferenceRegistry, ReferenceImport, ReferenceReview
 from ..config import PROJECT_ROOT, load_settings  # noqa: E402
 from .auth import authenticate, configure_auth, Principal  # noqa: E402
 from ..services.cases import CaseRepository  # noqa: E402
@@ -96,7 +99,12 @@ _TASKS: set[asyncio.Task] = set()
 
 async def _job_worker(queue):
     while True:
-        job = await asyncio.to_thread(queue.claim)
+        try:
+            job = await asyncio.to_thread(queue.claim)
+        except Exception:
+            log.exception('Could not access claim queue; retrying')
+            await asyncio.sleep(2)
+            continue
         if not job:
             await asyncio.sleep(0.2)
             continue
@@ -113,15 +121,20 @@ async def _job_worker(queue):
             raise
         except Exception:
             log.exception('Claim job %s failed', job['id'])
-            if job['attempts'] < 3:
-                await asyncio.to_thread(queue.finish, job, retry=True)
-            else:
-                failed = {'case_id': job['id'], 'status': 'failed',
-                          'error': 'Processing could not finish after retries. Please retry your upload.'}
-                await asyncio.to_thread(get_services().storage.put, f"cases/{job['id']}/case.json",
-                                        json.dumps(failed).encode(), 'application/json')
-                TRACES.discard(job['id'])
-                await asyncio.to_thread(queue.finish, job)
+            try:
+                if job['attempts'] < 3:
+                    await asyncio.to_thread(queue.finish, job, retry=True)
+                else:
+                    failed = {'case_id': job['id'], 'status': 'failed',
+                              'error': 'Processing could not finish after retries. Please retry your upload.'}
+                    await asyncio.to_thread(get_services().storage.put, f"cases/{job['id']}/case.json",
+                                            json.dumps(failed).encode(), 'application/json')
+                    TRACES.discard(job['id'])
+                    await asyncio.to_thread(queue.finish, job)
+            except Exception:
+                # An unavailable disk/storage must not permanently kill a worker.
+                # Leave the lease for recovery when storage becomes available.
+                log.exception('Could not save claim job failure; lease retained')
         finally:
             beat.cancel()
             await asyncio.gather(beat, return_exceptions=True)
@@ -138,16 +151,23 @@ async def _process_job(case_id, payload):
     checklist = None
     if payload.get('manifest'):
         checklist = await asyncio.to_thread(document_agent, payload['manifest'], svc, trace, payload['claim_type'])
+    analysis_case_id = f'{case_id}-attempt-{uuid.uuid4().hex}'
+    context_args = {'claim_context': payload['claim_type']} if payload.get('claim_type') else {}
     state = await run_audit(case_id, payload['bill_key'], payload['policy_key'],
                             payload['bill_name'], payload['policy_name'],
-                            owner_id=payload['owner_id'], tenant_id=payload['tenant_id'])
+                            owner_id=payload['owner_id'], tenant_id=payload['tenant_id'],
+                            analysis_case_id=analysis_case_id, **context_args)
     if checklist:
+        pages = checklist.pop('_medical_pages', [])
+        state['ai_clause_review'] = await asyncio.to_thread(clause_review_agent, state, pages, svc, trace)
         trace.emit('guidance_agent', 'start', 'Matching evidence gaps to your next steps')
         state['claim_review'] = await asyncio.to_thread(guidance_agent, state, checklist, payload['manifest'])
         trace.emit('guidance_agent', 'result', 'Your clause review and next steps are ready')
         state['trace'] = trace.events
     await asyncio.to_thread(svc.storage.put, key, json.dumps(state, default=str).encode(), 'application/json')
     TRACES.discard(case_id)
+    if hasattr(svc.store, 'release_case'):
+        await asyncio.to_thread(svc.store.release_case, analysis_case_id)
 
 
 async def _enqueue_case(request, files, bill_index, policy_index, claim_type=None):
@@ -430,6 +450,57 @@ def _regulatory_registry() -> RegulatoryRegistry:
     return RegulatoryRegistry(get_services().storage)
 
 
+@app.post('/api/admin/healthcare-references/import')
+def import_healthcare_references(batch: ReferenceImport, request: Request):
+    _require_regulatory_admin(request.state.principal)
+    return HealthcareReferenceRegistry(get_services().storage).import_records(batch)
+
+
+@app.post('/api/admin/healthcare-references/{kind}/{record_id}/review')
+def review_healthcare_reference(kind: str, record_id: str, review: ReferenceReview, request: Request):
+    _require_regulatory_admin(request.state.principal)
+    return HealthcareReferenceRegistry(get_services().storage).review(
+        kind, record_id, review, request.state.principal.subject).model_dump(mode='json')
+
+
+@app.get('/api/admin/healthcare-references/snapshot')
+def healthcare_reference_snapshot(request: Request) -> dict[str, Any]:
+    """List all imported healthcare reference records and room rules with their review status.
+
+    This endpoint is for demo and administrative inspection only. It returns metadata (IDs, names,
+    source types, verification status, enforcement flags) but does NOT return reference amounts or
+    prices — those remain in the registry and are only used by the audit engine at audit time.
+    """
+    _require_regulatory_admin(request.state.principal)
+    rates, room_rules = HealthcareReferenceRegistry(get_services().storage).snapshot()
+    return {
+        'rates': [
+            {'record_id': r.record_id, 'item_name': r.item_name, 'category': r.category,
+             'source_type': r.source_type, 'source_name': r.source_name,
+             'verification_status': r.verification_status, 'enforcement_enabled': r.enforcement_enabled,
+             'effective_date': r.effective_date.isoformat() if r.effective_date else None,
+             'geography': r.geography, 'unit': r.unit}
+            for r in rates
+        ],
+        'room_rules': [
+            {'rule_id': r.rule_id, 'rule_name': r.rule_name, 'source_name': r.source_name,
+             'verification_status': r.verification_status, 'enforcement_enabled': r.enforcement_enabled,
+             'effective_date': r.effective_date.isoformat() if r.effective_date else None,
+             'affected_categories': r.affected_categories, 'excluded_categories': r.excluded_categories,
+             'policy_document_id': r.policy_document_id}
+            for r in room_rules
+        ],
+        'counts': {'rates': len(rates), 'room_rules': len(room_rules),
+                   'rates_active': sum(1 for r in rates if r.enforcement_enabled),
+                   'room_rules_active': sum(1 for r in room_rules if r.enforcement_enabled)},
+        'notice': (
+            'This snapshot shows registry metadata only. Reference amounts are used by the audit engine '
+            'and are not displayed here. All records start as pending_human_review and require explicit '
+            'administrator approval before any rule can influence an audit finding.'
+        ),
+    }
+
+
 @app.get("/api/regulatory/documents")
 def regulatory_documents(request: Request) -> dict[str, Any]:
     registry = _regulatory_registry()
@@ -573,7 +644,17 @@ async def start_audit(
     policy: Optional[UploadFile] = File(None),
     sample_bill: Optional[str] = Form(None),
     sample_policy: Optional[str] = Form(None),
-) -> dict[str, str]:
+) -> dict[str, Any]:
+    if request.headers.get('content-type', '').split(';')[0].strip().lower() == 'application/json':
+        content = await request.body()
+        if len(content) > 2 * 1024 * 1024:
+            raise HTTPException(413, 'Structured audit input exceeds 2 MiB')
+        try:
+            normalized = HealthcareAuditInput.model_validate_json(content)
+        except ValidationError as exc:
+            raise HTTPException(422, json.loads(exc.json(include_url=False))) from exc
+        report = await asyncio.to_thread(run_healthcare_audit, normalized, get_services())
+        return {**report, 'status': 'complete', 'healthcare_audit': report}
     svc = get_services()
     cat = _catalog()
     samples_dir = svc.settings.data_dir / "samples"
@@ -1025,6 +1106,7 @@ async def events(case_id: str, request: Request) -> StreamingResponse:
             cursor += len(batch)
             current = await asyncio.to_thread(_case, case_id, principal)
             if current.get('status') != 'running':
+                TRACES.discard(case_id)
                 yield "event: end\ndata: {}\n\n"
                 return
             if time.monotonic() - last_beat > 10:
@@ -1042,7 +1124,7 @@ def case(case_id: str, request: Request) -> JSONResponse:
     if c.get("status") == "running":
         job = request.app.state.jobs.status(case_id) or {}
         return JSONResponse({"case_id": case_id, "status": "running", "processing_stage": job.get('status', 'queued')})
-    keep = ("case_id", "status", "error", "bill", "policy_doc", "policy_terms", "findings", "benchmark_comparisons", "reconciliation", "letters", "stack", "bill_name", "policy_name", "claim_review")
+    keep = ("case_id", "status", "error", "bill", "policy_doc", "policy_terms", "findings", "benchmark_comparisons", "reconciliation", "letters", "stack", "bill_name", "policy_name", "claim_review", "healthcare_audit")
     out = {k: c.get(k) for k in keep if k in c}
     out["files"] = {name: f"/api/cases/{case_id}/files/{name}" for name, key in ARTIFACT_FILES.items() if key in c.get("artifacts", {})}
     if out.get("bill"):
@@ -1128,4 +1210,27 @@ def letter_text(case_id: str, recipient: str, request: Request) -> PlainTextResp
     raise HTTPException(404)
 
 
+_base_openapi = app.openapi
+
+
+def _healthcare_openapi():
+    """Document both existing multipart jobs and normalized JSON on the same route."""
+    schema = _base_openapi()
+    components = schema.setdefault('components', {}).setdefault('schemas', {})
+    for model in (HealthcareAuditInput, HealthcareFinding):
+        definition = model.model_json_schema(ref_template='#/components/schemas/{model}')
+        components.update(definition.pop('$defs', {}))
+        components[model.__name__] = definition
+    content = schema['paths']['/api/audit']['post']['requestBody']['content']
+    content['application/json'] = {'schema': {'$ref': '#/components/schemas/HealthcareAuditInput'}}
+    operation = schema['paths']['/api/audit']['post']
+    operation['description'] = ('Multipart uploads start the existing asynchronous audit and return case_id. '
+                                'Normalized JSON runs deterministic healthcare reference checks synchronously and returns claim_id, '
+                                'total_billed, potential_discrepancy, benchmark_variance, finding_counts, warning_count and findings. '
+                                'It also returns status=complete and the same report under healthcare_audit for case consumers. '
+                                'Benchmark variances do not determine insurer liability.')
+    return schema
+
+
+app.openapi = _healthcare_openapi
 app.mount("/", StaticFiles(directory=PROJECT_ROOT / "web", html=True), name="web")
