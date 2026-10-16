@@ -46,8 +46,10 @@ def _try(flag: bool, label: str, make, fallback, warnings: list[str]):
     try:
         return make()
     except Exception as exc:  # noqa: BLE001 - any init failure means "use the local fallback"
-        msg = f"{label} unavailable ({type(exc).__name__}: {exc}); using local fallback"
-        log.warning(msg)
+        # Detailed provider errors can contain project, endpoint, or credential context.
+        # Keep diagnostics in server logs and expose only a stable status to API clients.
+        msg = f"{label} unavailable ({type(exc).__name__}); using local fallback"
+        log.warning("%s initialization failed; using local fallback", label, exc_info=True)
         warnings.append(msg)
         return fallback()
 

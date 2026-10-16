@@ -46,7 +46,10 @@ def configure_auth(settings: Settings) -> AuthConfig:
         raise ValueError("CLAIMSHIELD_PUBLIC_ORIGIN must be an HTTPS origin without a path")
     if not re.fullmatch(r"/projects/[0-9]+/locations/[a-z0-9-]+/services/[a-z0-9-]+", settings.iap_audience):
         raise ValueError("Set CLAIMSHIELD_IAP_AUDIENCE to the native Cloud Run IAP resource audience")
-    memberships = json.loads(settings.auth_memberships)
+    try:
+        memberships = json.loads(settings.auth_memberships)
+    except (TypeError, json.JSONDecodeError) as exc:
+        raise ValueError("CLAIMSHIELD_AUTH_MEMBERSHIPS must be a JSON object") from exc
     if not isinstance(memberships, dict) or not memberships:
         raise ValueError("Configure verified IAP subject-to-tenant memberships")
     for subject, tenant in memberships.items():
@@ -88,7 +91,8 @@ def authenticate(request: Request, config: AuthConfig) -> Principal:
                                 issuer=IAP_ISSUER,
                                 options={"require": ["sub", "iss", "aud", "exp", "iat"], "strict_aud": True})
             if (type(claims["exp"]) not in (int, float) or type(claims["iat"]) not in (int, float)
-                    or claims["exp"] <= claims["iat"]):
+                    or claims["exp"] <= claims["iat"] or not isinstance(claims["sub"], str)
+                    or not claims["sub"]):
                 raise jwt.InvalidTokenError()
         except jwt.PyJWKClientConnectionError:
             raise HTTPException(503, "Identity verification temporarily unavailable") from None

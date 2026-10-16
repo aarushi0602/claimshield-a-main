@@ -294,7 +294,3 @@ def normalize_policy(raw: RawDocument, source: str, document_id: str | None = No
 
 def looks_like_pdf(data: bytes) -> bool:
     return data[:5] == b"%PDF-"
-
-
-def read_bytes(path: str | Path) -> bytes:
-    return Path(path).read_bytes()

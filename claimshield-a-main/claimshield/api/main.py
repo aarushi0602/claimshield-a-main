@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import hmac
 import json
 import csv
 import io
@@ -41,6 +42,7 @@ from ..services.healthcare_audit import run_healthcare_audit
 from ..services.healthcare_references import HealthcareReferenceRegistry, ReferenceImport, ReferenceReview
 from ..config import PROJECT_ROOT, load_settings  # noqa: E402
 from .auth import authenticate, configure_auth, Principal  # noqa: E402
+from .job_worker import run_job_worker  # noqa: E402
 from ..services.cases import CaseRepository  # noqa: E402
 from ..services import get_services  # noqa: E402
 from ..services.parsing import looks_like_pdf  # noqa: E402
@@ -60,7 +62,7 @@ from ..services.review import (ReviewDecision, build_review_item, record_outcome
 from ..services.claim_dashboard import (ClaimOutcomeRecord, make_claim_summary,
                                         aggregate_summaries, owner_matches)  # noqa: E402
 from ..services.regulatory import (ApplicabilityRequest, DocumentReview, RegulatoryRegistry,
-                                   RegulatoryRule, RuleReview, extract_pdf_pages)  # noqa: E402
+                                   RegulatoryRule, RuleReview)  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 log = logging.getLogger("claimshield.api")
@@ -77,13 +79,15 @@ _INDEX_LOCK = threading.Lock()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Validate before any cloud services initialize; missing auth never enables demo.
-    app.state.auth_config = configure_auth(load_settings())
     settings = load_settings()
+    app.state.auth_config = configure_auth(settings)
+    svc = get_services()
     app.state.jobs = JobQueue(settings.work_dir / 'jobs.sqlite3',
-                              capacity=max(1, int(os.getenv('CLAIMSHIELD_QUEUE_CAPACITY', '100'))),
-                              per_owner=max(1, int(os.getenv('CLAIMSHIELD_USER_PENDING_LIMIT', '3'))))
+                              capacity=settings.queue_capacity,
+                              per_owner=settings.per_owner_pending_limit,
+                              storage=svc.storage)
     workers = [asyncio.create_task(_job_worker(app.state.jobs))
-               for _ in range(max(1, min(16, int(os.getenv('CLAIMSHIELD_WORKERS', '2')))))]
+               for _ in range(settings.worker_count)]
     try:
         yield
     finally:
@@ -94,50 +98,11 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="ClaimShield AI", version="0.1.0", lifespan=lifespan)
 CASES: dict[str, dict[str, Any]] = {}
-_TASKS: set[asyncio.Task] = set()
 
 
 async def _job_worker(queue):
-    while True:
-        try:
-            job = await asyncio.to_thread(queue.claim)
-        except Exception:
-            log.exception('Could not access claim queue; retrying')
-            await asyncio.sleep(2)
-            continue
-        if not job:
-            await asyncio.sleep(0.2)
-            continue
-        async def heartbeat():
-            while True:
-                await asyncio.sleep(30)
-                await asyncio.to_thread(queue.renew, job)
-        beat = asyncio.create_task(heartbeat())
-        try:
-            await _process_job(job['id'], job['payload'])
-            await asyncio.to_thread(queue.finish, job)
-        except asyncio.CancelledError:
-            # Leave the lease in place. A replacement worker recovers after expiry.
-            raise
-        except Exception:
-            log.exception('Claim job %s failed', job['id'])
-            try:
-                if job['attempts'] < 3:
-                    await asyncio.to_thread(queue.finish, job, retry=True)
-                else:
-                    failed = {'case_id': job['id'], 'status': 'failed',
-                              'error': 'Processing could not finish after retries. Please retry your upload.'}
-                    await asyncio.to_thread(get_services().storage.put, f"cases/{job['id']}/case.json",
-                                            json.dumps(failed).encode(), 'application/json')
-                    TRACES.discard(job['id'])
-                    await asyncio.to_thread(queue.finish, job)
-            except Exception:
-                # An unavailable disk/storage must not permanently kill a worker.
-                # Leave the lease for recovery when storage becomes available.
-                log.exception('Could not save claim job failure; lease retained')
-        finally:
-            beat.cancel()
-            await asyncio.gather(beat, return_exceptions=True)
+    # Keep this application-level adapter so existing integrations can patch or call it.
+    await run_job_worker(queue, _process_job, get_services, TRACES, log)
 
 
 async def _process_job(case_id, payload):
@@ -165,9 +130,19 @@ async def _process_job(case_id, payload):
         trace.emit('guidance_agent', 'result', 'Your clause review and next steps are ready')
         state['trace'] = trace.events
     await asyncio.to_thread(svc.storage.put, key, json.dumps(state, default=str).encode(), 'application/json')
+    job_key = f'cases/{case_id}/job.json'
+    if svc.storage.exists(job_key):
+        try:
+            job_record = json.loads(svc.storage.get(job_key))
+            job_record['status'] = 'complete'
+            job_record['lease'] = 0
+            svc.storage.put(job_key, json.dumps(job_record).encode(), 'application/json')
+        except Exception:
+            pass
     TRACES.discard(case_id)
     if hasattr(svc.store, 'release_case'):
         await asyncio.to_thread(svc.store.release_case, analysis_case_id)
+
 
 
 async def _enqueue_case(request, files, bill_index, policy_index, claim_type=None):
@@ -196,6 +171,47 @@ async def _enqueue_case(request, files, bill_index, policy_index, claim_type=Non
     await asyncio.to_thread(_register_review_case, case_id, principal)
     await asyncio.to_thread(_register_history_case, case_id, principal)
     return {'case_id': case_id}
+
+
+@app.post("/api/internal/jobs/{case_id}/process")
+async def process_internal_job(case_id: str, request: Request) -> dict[str, Any]:
+    """Internal idempotent processing endpoint for Cloud Tasks or async background workers."""
+    token = request.headers.get("X-ClaimShield-Internal-Token", "")
+    expected = os.getenv("CLAIMSHIELD_INTERNAL_TOKEN", "")
+    is_demo = os.getenv("CLAIMSHIELD_AUTH_MODE", "iap").strip().lower() == "demo"
+    is_loopback = request.client and request.client.host in ("127.0.0.1", "::1", "localhost", "testclient")
+    token_valid = bool(expected and token and hmac.compare_digest(token, expected))
+    authorized = token_valid or bool(is_demo and is_loopback)
+    if not authorized:
+        raise HTTPException(403, "Internal endpoint access forbidden.")
+
+    svc = get_services()
+    case_key = f"cases/{case_id}/case.json"
+    if not svc.storage.exists(case_key):
+        raise HTTPException(404, "Unknown case")
+
+    try:
+        case_data = json.loads(svc.storage.get(case_key))
+    except (OSError, ValueError) as exc:
+        raise HTTPException(503, "Job state is temporarily unavailable.") from exc
+    if case_data.get("status") in {"complete", "failed"}:
+        return {"case_id": case_id, "status": case_data["status"], "already_processed": True}
+
+    job_key = f"cases/{case_id}/job.json"
+    if not svc.storage.exists(job_key):
+        raise HTTPException(409, "Job is not ready for processing.")
+    try:
+        job_record = json.loads(svc.storage.get(job_key))
+        payload = job_record.get("payload")
+        if not isinstance(payload, dict) or not payload:
+            raise ValueError("invalid job payload")
+    except (OSError, ValueError, AttributeError) as exc:
+        raise HTTPException(409, "Job record is invalid or unavailable.") from exc
+
+    await _process_job(case_id, payload)
+    final_case = json.loads(svc.storage.get(case_key))
+    return {"case_id": case_id, "status": final_case.get("status", "complete")}
+
 
 
 def _review_index_key(principal: Principal) -> str:

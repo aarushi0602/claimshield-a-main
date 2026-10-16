@@ -108,25 +108,48 @@ class HealthcareReferenceRegistry:
 
     def _load(self):
         if not self.storage.exists(self.KEY):
-            return {'schema_version': 1, 'rates': {}, 'room_rules': {}}
-        data = json.loads(self.storage.get(self.KEY))
+            return {'schema_version': 1, 'version': 1, 'rates': {}, 'room_rules': {}}, 0
+        try:
+            if hasattr(self.storage, 'get_with_generation'):
+                content, gen = self.storage.get_with_generation(self.KEY)
+            else:
+                content, gen = self.storage.get(self.KEY), 1
+        except FileNotFoundError:
+            return {'schema_version': 1, 'version': 1, 'rates': {}, 'room_rules': {}}, 0
+        data = json.loads(content)
         if (not isinstance(data, dict) or data.get('schema_version') != 1
                 or not isinstance(data.get('rates'), dict) or not isinstance(data.get('room_rules'), dict)):
             raise ValueError('Unsupported healthcare reference schema')
-        return data
+        if 'version' not in data:
+            data['version'] = 1
+        return data, gen
 
-    def _save(self, data):
-        self.storage.put(self.KEY, json.dumps(data).encode(), 'application/json')
+    def _save(self, data, generation: int = 0):
+        new_version = data.get('version', 1) + 1
+        data['version'] = new_version
+        payload = json.dumps(data, indent=2).encode('utf-8')
+        from .storage import StorageConcurrencyError
+        try:
+            if hasattr(self.storage, 'put_if_generation_match'):
+                self.storage.put_if_generation_match(self.KEY, payload, generation, 'application/json')
+            else:
+                self.storage.put(self.KEY, payload, 'application/json')
+        except StorageConcurrencyError as exc:
+            raise HTTPException(409, 'Healthcare reference registry was modified concurrently by another administrator. Please reload and retry.') from exc
+        try:
+            self.storage.put(f'healthcare-reference/history/v{new_version}.json', payload, 'application/json')
+        except Exception:
+            pass
 
     def snapshot(self):
         with self._lock:
-            data = self._load()
+            data, _ = self._load()
             return ([HealthcareRate.model_validate(row) for row in data['rates'].values()],
                     [RoomAdjustmentRule.model_validate(row) for row in data['room_rules'].values()])
 
     def import_records(self, batch: ReferenceImport):
         with self._lock:
-            data = self._load()
+            data, gen = self._load()
             incoming = [('rates', r.record_id, r) for r in batch.rates]
             incoming += [('room_rules', r.rule_id, r) for r in batch.room_rules]
             identities = [(kind, key) for kind, key, _ in incoming]
@@ -138,12 +161,12 @@ class HealthcareReferenceRegistry:
                     'imported_at': datetime.now(timezone.utc), 'reviewed_at': None, 'reviewed_by': None,
                     'reviewer_explanation': ''})
                 data[kind][key] = record.model_dump(mode='json')
-            self._save(data)
+            self._save(data, gen)
             return {'imported': len(incoming), 'verification_status': 'pending_human_review', 'enforcement_enabled': False}
 
     def review(self, kind: str, key: str, review: ReferenceReview, reviewer: str):
         with self._lock:
-            data = self._load()
+            data, gen = self._load()
             if kind not in {'rates', 'room_rules'} or key not in data[kind]:
                 raise HTTPException(404, 'Unknown healthcare reference')
             cls = HealthcareRate if kind == 'rates' else RoomAdjustmentRule
@@ -164,7 +187,7 @@ class HealthcareReferenceRegistry:
                 'reviewed_by': reviewer, 'reviewed_at': datetime.now(timezone.utc),
                 'reviewer_explanation': review.explanation})
             data[kind][key] = updated.model_dump(mode='json')
-            self._save(data)
+            self._save(data, gen)
             return updated
 
 

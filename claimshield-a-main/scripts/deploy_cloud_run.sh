@@ -25,18 +25,20 @@ CLAIMSHIELD_USE_BIGQUERY BQ_DATASET CLAIMSHIELD_USE_VERTEX_SEARCH VERTEX_SEARCH_
 VERTEX_SEARCH_DATASTORE_ID CLAIMSHIELD_USE_GEMINI GEMINI_MODEL CLAIMSHIELD_USE_GCS GCS_BUCKET
 CLAIMSHIELD_USE_ADK CLAIMSHIELD_OUTLIER_RATIO CLAIMSHIELD_DEMO_PACE CLAIMSHIELD_AUTH_MODE
 CLAIMSHIELD_IAP_AUDIENCE CLAIMSHIELD_PUBLIC_ORIGIN CLAIMSHIELD_AUTH_MEMBERSHIPS
-CLAIMSHIELD_REGULATORY_ADMIN_SUBJECTS""".split()
+CLAIMSHIELD_REVIEWER_SUBJECTS CLAIMSHIELD_REGULATORY_ADMIN_SUBJECTS
+CLAIMSHIELD_INTERNAL_TOKEN CLAIMSHIELD_USE_CLOUD_TASKS CLOUD_TASKS_QUEUE""".split()
 with open(sys.argv[1], "w", encoding="utf-8") as stream:
     json.dump({k: os.environ[k] for k in names if os.environ.get(k)}, stream)
 PY
 
-# The live trace streams from the instance running the audit, so keep to one instance and
-# turn on session affinity. Plenty for a demo; see README "Scaling beyond the demo".
+# Always allocate CPU (--no-cpu-throttling) so asynchronous background workers have CPU
+# even when client connections close. Keep session affinity and timeout for long extractions.
 gcloud run deploy "$SERVICE" \
   --project "$PROJECT" --region "$REGION" --source . \
   --service-account "$SA" \
   --no-allow-unauthenticated --iap \
   --memory 1Gi --cpu 1 --timeout 300 \
+  --no-cpu-throttling \
   --min-instances 1 --max-instances 1 --session-affinity \
   --env-vars-file "$ENV_FILE"
 

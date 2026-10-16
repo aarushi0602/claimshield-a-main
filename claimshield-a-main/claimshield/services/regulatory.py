@@ -181,25 +181,54 @@ class RegulatoryRegistry:
         ]
         return {"schema_version": 1, "documents": {d.document_id: d.model_dump(mode="json") for d in docs}, "rules": {}}
 
-    def _load(self) -> dict[str, Any]:
+    def _load(self) -> tuple[dict[str, Any], int]:
         if not self.storage.exists(self.REGISTRY_KEY):
-            return self._seed()
-        data = json.loads(self.storage.get(self.REGISTRY_KEY))
+            seed = self._seed()
+            seed["version"] = 1
+            return seed, 0
+        try:
+            if hasattr(self.storage, "get_with_generation"):
+                content, gen = self.storage.get_with_generation(self.REGISTRY_KEY)
+            else:
+                content, gen = self.storage.get(self.REGISTRY_KEY), 1
+        except FileNotFoundError:
+            seed = self._seed()
+            seed["version"] = 1
+            return seed, 0
+        data = json.loads(content)
         if (not isinstance(data, dict) or data.get('schema_version') != 1
                 or not isinstance(data.get('documents'), dict) or not isinstance(data.get('rules'), dict)):
             raise ValueError("unsupported regulatory registry schema")
-        return data
+        if "version" not in data:
+            data["version"] = 1
+        return data, gen
 
-    def _save(self, data: dict[str, Any]) -> None:
-        self.storage.put(self.REGISTRY_KEY, json.dumps(data, sort_keys=True).encode(), "application/json")
+    def _save(self, data: dict[str, Any], generation: int = 0) -> None:
+        new_version = data.get("version", 1) + 1
+        data["version"] = new_version
+        payload = json.dumps(data, sort_keys=True, indent=2).encode("utf-8")
+        from .storage import StorageConcurrencyError
+        try:
+            if hasattr(self.storage, "put_if_generation_match"):
+                self.storage.put_if_generation_match(self.REGISTRY_KEY, payload, generation, "application/json")
+            else:
+                self.storage.put(self.REGISTRY_KEY, payload, "application/json")
+        except StorageConcurrencyError as exc:
+            raise HTTPException(409, "Regulatory registry was modified concurrently by another administrator. Please reload and retry.") from exc
+        try:
+            self.storage.put(f"regulatory/history/v{new_version}.json", payload, "application/json")
+        except Exception:
+            pass
 
     def list_documents(self) -> list[RegulatoryDocument]:
         with self._lock:
-            return [RegulatoryDocument.model_validate(v) for v in self._load()["documents"].values()]
+            data, _ = self._load()
+            return [RegulatoryDocument.model_validate(v) for v in data["documents"].values()]
 
     def list_rules(self) -> list[RegulatoryRule]:
         with self._lock:
-            return [RegulatoryRule.model_validate(v) for v in self._load()["rules"].values()]
+            data, _ = self._load()
+            return [RegulatoryRule.model_validate(v) for v in data["rules"].values()]
 
     def search_rules(self, query: str = "") -> list[RegulatoryRule]:
         terms = set(re.findall(r"[a-z0-9]+", query.casefold()))
@@ -233,7 +262,7 @@ class RegulatoryRegistry:
         extracted_pages = extract_pdf_pages(pdf_bytes)
         digest = hashlib.sha256(pdf_bytes).hexdigest()
         with self._lock:
-            data = self._load()
+            data, gen = self._load()
             prior = data["documents"].get(document_id)
             if prior is None:
                 raise HTTPException(404, "Document ID is not in the approved IRDAI document allowlist")
@@ -252,21 +281,22 @@ class RegulatoryRegistry:
                 "human_review_status": ReviewStatus.PENDING,
                 "ingestion_note": "PDF received from an administrator; provenance and currentness still require human verification."})
             data["documents"][document_id] = record.model_dump(mode="json")
-            self._save(data)
+            self._save(data, gen)
             return record
 
     def get_document(self, document_id: str) -> RegulatoryDocument:
         with self._lock:
-            data = self._load()["documents"].get(document_id)
-            if not data:
+            data, _ = self._load()
+            doc_data = data["documents"].get(document_id)
+            if not doc_data:
                 raise HTTPException(404, "Regulatory document not found")
-            return RegulatoryDocument.model_validate(data)
+            return RegulatoryDocument.model_validate(doc_data)
 
     def create_candidate(self, rule: RegulatoryRule) -> RegulatoryRule:
         rule.human_review_status = ReviewStatus.PENDING
         rule.enforcement_enabled = False
         with self._lock:
-            data = self._load()
+            data, gen = self._load()
             doc_data = data["documents"].get(rule.source_document_id)
             if not doc_data:
                 raise HTTPException(404, "Source regulatory document not found")
@@ -281,12 +311,12 @@ class RegulatoryRegistry:
             if _norm(rule.source_quote) not in _norm(pages[rule.source_page - 1]):
                 raise HTTPException(400, "Exact rule quotation was not found on the cited source page")
             data["rules"][rule.rule_id] = rule.model_dump(mode="json")
-            self._save(data)
+            self._save(data, gen)
             return rule
 
     def review_rule(self, rule_id: str, review: RuleReview, reviewer_id: str = "") -> RegulatoryRule:
         with self._lock:
-            data = self._load()
+            data, gen = self._load()
             stored = data["rules"].get(rule_id)
             if not stored:
                 raise HTTPException(404, "Regulatory rule not found")
@@ -294,7 +324,10 @@ class RegulatoryRegistry:
             if review.human_review_status == ReviewStatus.APPROVED:
                 if source_restricted_to_demo(synthetic=rule.synthetic):
                     raise HTTPException(409, 'Synthetic regulatory rules may only be reviewed in local demo mode')
-                doc = self.get_document(rule.source_document_id)
+                doc_data = data["documents"].get(rule.source_document_id)
+                if not doc_data:
+                    raise HTTPException(404, "Source regulatory document not found")
+                doc = RegulatoryDocument.model_validate(doc_data)
                 if doc.human_review_status != ReviewStatus.APPROVED:
                     raise HTTPException(409, "Source document must be human-reviewed before its rule can be approved")
                 if not _citation_matches(self.storage, doc, rule):
@@ -313,14 +346,17 @@ class RegulatoryRegistry:
             rule.reviewed_by = reviewer_id or None
             rule.reviewed_at = date.today()
             data["rules"][rule_id] = rule.model_dump(mode="json")
-            self._save(data)
+            self._save(data, gen)
             return rule
 
     def review_document(self, document_id: str, review: DocumentReview, verification_date: date | None = None,
                         reviewer_id: str = "") -> RegulatoryDocument:
         with self._lock:
-            data = self._load()
-            doc = self.get_document(document_id)
+            data, gen = self._load()
+            doc_data = data["documents"].get(document_id)
+            if not doc_data:
+                raise HTTPException(404, "Regulatory document not found")
+            doc = RegulatoryDocument.model_validate(doc_data)
             if review.human_review_status == ReviewStatus.APPROVED and not doc.sha256:
                 raise HTTPException(409, "An unimported document cannot be approved")
             if review.human_review_status == ReviewStatus.APPROVED and not review.currentness_checked:
@@ -331,7 +367,7 @@ class RegulatoryRegistry:
             doc.reviewed_by = reviewer_id or None
             doc.last_verification_date = verification_date or date.today()
             data["documents"][document_id] = doc.model_dump(mode="json")
-            self._save(data)
+            self._save(data, gen)
             return doc
 
     def evidence(self, document_id: str, page: int | None = None) -> dict[str, Any]:
@@ -356,7 +392,7 @@ class RegulatoryRegistry:
 
     def applicability(self, rule_id: str, context: ApplicabilityRequest) -> dict[str, Any]:
         with self._lock:
-            data = self._load()
+            data, _ = self._load()
             raw = data["rules"].get(rule_id)
             if not raw:
                 raise HTTPException(404, "Regulatory rule not found")

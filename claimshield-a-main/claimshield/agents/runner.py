@@ -87,8 +87,8 @@ async def run_audit(case_id: str, bill_key: str, policy_key: str, bill_name: str
         trace.emit("orchestrator", "done", "Audit complete")
     except Exception as exc:  # noqa: BLE001 - report any failure to the UI instead of hanging the stream
         log.error("audit %s failed: %s", case_id, traceback.format_exc())
-        state = {**initial, "status": "failed", "error": f"{type(exc).__name__}: {exc}"}
-        trace.emit("orchestrator", "error", f"Audit failed: {type(exc).__name__}: {exc}")
+        state = {**initial, "status": "failed", "error": "Audit could not be completed. Please retry the upload."}
+        trace.emit("orchestrator", "error", "Audit failed; diagnostic details were recorded in the server log.")
     finally:
         trace.finish()
     state["trace"] = trace.events
