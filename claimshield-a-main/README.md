@@ -18,7 +18,7 @@ Built for the Google Cloud AI hackathon, **BFSI theme** (intelligent risk, fraud
 | Duplicate charges | SQL window over (date, code, qty, price) | High; Worth reviewing for pharmacy/therapy, where repeats can be legitimate |
 | Quantity x rate errors | SQL `qty * unit_price <> amount` | High |
 | Room days beyond the length of stay | admission/discharge dates vs room quantity | High |
-| Gross total ≠ sum of lines | totals reconciliation | High |
+| Gross total â‰  sum of lines | totals reconciliation | High |
 | Settlement differs from the policy (co-pay, sub-limit, room-rent cap, wrongly excluded items) | **policy replay**: the insurer's parameters are read back from its printed deductions, then each one is swapped for the policy's value in turn. Each finding's impact is that step's change in payout, so the impacts add up exactly to the total shortfall | High |
 | Possible upcoding | SQL: billed complexity tier vs the typical tier for the procedure | Worth reviewing |
 | Price far above benchmark | SQL: unit price > 1.3x the 90th-percentile reference price | Worth reviewing |
@@ -36,13 +36,13 @@ Each finding in `GET /api/cases/{id}` now includes an additive `evidence` object
 Browser (web/)  --POST /api/audit-->  FastAPI on Cloud Run  --SSE /events-->  live agent trace
                                           |
                     ADK  claimshield_orchestrator (SequentialAgent)
-                      ├─ intake_agent          Document AI -> normalised bill + policy JSON; rows -> BigQuery
-                      ├─ policy_agent          Vertex AI Search -> governing clauses -> structured terms (+ Gemini cross-check)
-                      ├─ findings_team (ParallelAgent)
-                      │    ├─ audit_agent      duplicates / arithmetic / stay / totals SQL + policy replay
-                      │    └─ benchmark_agent  reference-pricing + upcoding SQL
-                      ├─ reconciliation_agent  billed vs covered vs owed; likely and upper-bound recovery
-                      └─ dispute_agent         Gemini explanations + letters; report PDFs -> Cloud Storage
+                      â”œâ”€ intake_agent          Document AI -> normalised bill + policy JSON; rows -> BigQuery
+                      â”œâ”€ policy_agent          Vertex AI Search -> governing clauses -> structured terms (+ Gemini cross-check)
+                      â”œâ”€ findings_team (ParallelAgent)
+                      â”‚    â”œâ”€ audit_agent      duplicates / arithmetic / stay / totals SQL + policy replay
+                      â”‚    â””â”€ benchmark_agent  reference-pricing + upcoding SQL
+                      â”œâ”€ reconciliation_agent  billed vs covered vs owed; likely and upper-bound recovery
+                      â””â”€ dispute_agent         Gemini explanations + letters; report PDFs -> Cloud Storage
 ```
 
 Agents pass results through ADK session state (`EventActions.state_delta`). Every step writes to a per-case trace. The UI streams it live, and each event is also logged as one JSON line, which Cloud Run ships to Cloud Logging.
@@ -62,18 +62,18 @@ Agents pass results through ADK session state (`EventActions.state_delta`). Ever
 
 ```
 claimshield/
-  agents/      steps.py (the six agents' logic) · adk_agents.py (ADK graph) · runner.py
-  domain/      coverage.py (entitlement engine + policy replay) · policy_terms.py
-  services/    parsing.py · store.py · retrieval.py · llm.py · storage.py · __init__.py (fallback wiring)
-  sql/         duplicates · arithmetic · benchmark_outliers · upcoding · schema_bigquery
+  agents/      steps.py (the six agents' logic) Â· adk_agents.py (ADK graph) Â· runner.py
+  domain/      coverage.py (entitlement engine + policy replay) Â· policy_terms.py
+  services/    parsing.py Â· store.py Â· retrieval.py Â· llm.py Â· storage.py Â· __init__.py (fallback wiring)
+  sql/         duplicates Â· arithmetic Â· benchmark_outliers Â· upcoding Â· schema_bigquery
   reports/     pdf.py (reconciliation report + letters)
   api/main.py  FastAPI + static UI
-web/           index.html · app.js · styles.css (no build step)
+web/           index.html Â· app.js Â· styles.css (no build step)
 data/
   generate.py  synthetic bills/policies generator (with planted issues)
-  reference/   reference_pricing.csv · procedure_benchmarks.csv
-  samples/     generated PDFs · catalog.json · expected.json (answer key)
-scripts/       run_samples.py · setup_gcp.sh · load_bigquery.py · index_policies.py · deploy_cloud_run.sh
+  reference/   reference_pricing.csv Â· procedure_benchmarks.csv
+  samples/     generated PDFs Â· catalog.json Â· expected.json (answer key)
+scripts/       run_samples.py Â· setup_gcp.sh Â· load_bigquery.py Â· index_policies.py Â· deploy_cloud_run.sh
 tests/         answer-key E2E tests (ADK and plain runners), API tests, Gemini guard tests
 docs/          DEMO_SCRIPT.md
 ```
@@ -140,9 +140,9 @@ regenerate the lock while preserving its platform markers and manifest include, 
 
 | Bill | Policy | Planted issues | Result |
 |---|---|---|---|
-| BILL-001 Sunrise, appendectomy | Suraksha Gold | duplicate CBC; Ceftriaxone 6 x ₹180 billed ₹1,800; Grade IV anaesthesia for a routine case; 20% co-pay at a network hospital (policy: 0%); admission kit deducted though the policy covers consumables | recovery ₹24,846 |
-| BILL-002 Netra, cataract | Suraksha Gold | eye drops 2 x ₹450 billed ₹1,350; gross total ₹1,000 above the lines; sub-limit applied at ₹35,000 (policy: ₹40,000) | recovery ₹6,450 |
-| BILL-003 Lotus, knee replacement | CareFirst Silver | room billed 6 days for 5 nights; physio twice on the same day; MRI 1.6x the benchmark; sub-limit at ₹1,00,000 (policy: ₹1,50,000) | ₹42,800 likely, up to ₹49,100 |
+| BILL-001 Sunrise, appendectomy | Suraksha Gold | duplicate CBC; Ceftriaxone 6 x â‚¹180 billed â‚¹1,800; Grade IV anaesthesia for a routine case; 20% co-pay at a network hospital (policy: 0%); admission kit deducted though the policy covers consumables | recovery â‚¹24,846 |
+| BILL-002 Netra, cataract | Suraksha Gold | eye drops 2 x â‚¹450 billed â‚¹1,350; gross total â‚¹1,000 above the lines; sub-limit applied at â‚¹35,000 (policy: â‚¹40,000) | recovery â‚¹6,450 |
+| BILL-003 Lotus, knee replacement | CareFirst Silver | room billed 6 days for 5 nights; physio twice on the same day; MRI 1.6x the benchmark; sub-limit at â‚¹1,00,000 (policy: â‚¹1,50,000) | â‚¹42,800 likely, up to â‚¹49,100 |
 | BILL-004 Sanjeevani, dengue | CareFirst Silver | **none (clean bill)**: repeat CBCs on different days, correct 20% co-pay, correctly excluded admission kit | **0 findings** |
 
 Correctly applied exclusions (attendant food on BILL-001, gloves and masks on BILL-003) are deliberately *not* flagged.
@@ -323,6 +323,15 @@ You can turn services on one at a time, e.g. only `CLAIMSHIELD_USE_GEMINI=true`,
 | `CLAIMSHIELD_USE_ADK` | `true` | ADK orchestration (plain runner if `false` or ADK missing) |
 | `CLAIMSHIELD_OUTLIER_RATIO` | `1.3` | benchmark threshold (x p90) |
 | `CLAIMSHIELD_DEMO_PACE` | `0` | seconds to pause per trace step |
+| `CLAIMSHIELD_WORKERS` | `2` | local queue workers per process; integer from 1 to 16 |
+| `CLAIMSHIELD_QUEUE_CAPACITY` | `100` | maximum queued and running jobs |
+| `CLAIMSHIELD_USER_PENDING_LIMIT` | `3` | maximum pending jobs per issuer, tenant and user |
+| `CLAIMSHIELD_INTERNAL_TOKEN` | - | shared secret required by the internal job-processing endpoint outside local demo mode |
+| `CLAIMSHIELD_USE_CLOUD_TASKS` / `CLOUD_TASKS_QUEUE` | `false` / - | reserved deployment variables; runtime job submission still uses the local SQLite queue |
+
+Boolean flags accept `true`/`false`, `yes`/`no`, `on`/`off`, or `1`/`0` (case-insensitive). Invalid boolean values, non-positive worker limits, worker counts above 16, and non-finite or non-positive outlier ratios stop startup with a configuration error. The deployment script passes `CLAIMSHIELD_INTERNAL_TOKEN` to Cloud Run when set; store a high-entropy value as a secret and configure the caller to provide it. The internal processing endpoint also passes through the app's IAP authentication middleware; local demo access is limited to loopback.
+
+Local file storage resolves every object key beneath its configured root, including symlink targets, and rejects keys that escape that root. Provider initialization failures continue to use the configured local fallback; detailed diagnostics stay in server logs while the health response exposes a sanitized warning.
 
 ## What has and hasn't been verified
 
@@ -339,3 +348,4 @@ You can turn services on one at a time, e.g. only `CLAIMSHIELD_USE_GEMINI=true`,
 ## Guided two-group claim review
 
 The main page now accepts medical documents and insurance documents together, identifies missing evidence, lists every extracted policy clause, and prioritizes next actions. Audit and guided-review requests use a bounded persistent single-host queue. See [claim review behavior, feature boundaries, and capacity guidance](docs/CLAIM_REVIEW.md). This does not yet establish full claim eligibility or provide horizontally scaled cloud processing.
+
