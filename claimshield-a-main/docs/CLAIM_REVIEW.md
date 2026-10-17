@@ -1,7 +1,7 @@
 # Guided claim review
 
-The main user journey is medical documents + insurance documents → evidence review → next actions.
-It accepts one claim at a time, with 1–10 PDFs in each group, at most 15 MB per file and 50 MB total.
+The main user journey is medical documents + insurance documents â†’ evidence review â†’ next actions.
+It accepts one claim at a time, with 1â€“10 PDFs in each group, at most 15 MB per file and 50 MB total.
 Users explicitly select the itemised bill and main policy wording; the system does not guess which
 renewal or bill governs the claim. `/api/claim-review` uses the same authentication and case ownership
 checks as `/api/audit`. Original files remain in owner-protected case storage.
@@ -52,9 +52,13 @@ storage; completed HTTP jobs release transient local analytical rows. Local file
 
 | Setting | Default | Scope |
 |---|---|---|
-| `CLAIMSHIELD_WORKERS` | 2 | Concurrent claim jobs per application process; clamped to 1–16 |
+| `CLAIMSHIELD_WORKERS` | 2 | Concurrent claim jobs per application process; must be an integer from 1 to 16 |
 | `CLAIMSHIELD_QUEUE_CAPACITY` | 100 | Outstanding queued and running jobs |
 | `CLAIMSHIELD_USER_PENDING_LIMIT` | 3 | Outstanding jobs per issuer, tenant and user |
+
+The application rejects invalid boolean flags, non-positive queue limits, worker counts above 16,
+and invalid outlier ratios at startup. See the README environment-variable table for accepted boolean
+spellings and the internal job token.
 
 When full, the API returns HTTP 429 with `Retry-After: 10`. Upload validation happens before enqueueing.
 Rejected enqueue attempts can leave an inaccessible staging case on disk; storage retention must include
@@ -62,9 +66,13 @@ such staging artifacts. Queue records and case files require an operational rete
 
 **Deployment boundary:** use one application process on one host with persistent local disk for this
 queue. SQLite is not a horizontally distributed queue. Ephemeral Cloud Run filesystems do not provide
-restart durability, and request-based CPU allocation can suspend background work. The existing Cloud
-Run deployment script has not been upgraded or deployed as part of this change. Other standalone
-assessment endpoints still execute within their HTTP requests and are not governed by this job queue.
+restart durability, and request-based CPU allocation can suspend background work. The deployment
+script pins Cloud Run to one instance and enables CPU outside requests, but does not turn the local
+SQLite queue into Cloud Tasks. An internal processing endpoint exists for trusted dispatch; requests
+must pass the normal IAP boundary and present `CLAIMSHIELD_INTERNAL_TOKEN` (local loopback demo is the
+exception). The `CLAIMSHIELD_USE_CLOUD_TASKS` and `CLOUD_TASKS_QUEUE` variables are currently forwarded
+by the deploy script but are not consumed by runtime dispatch code. Other standalone assessment
+endpoints still execute within their HTTP requests and are not governed by this job queue.
 
 Before high-volume production: replace the local queue with a managed durable queue (such as Cloud
 Tasks), dispatch authenticated workers, use shared durable job/trace/index storage with conditional
@@ -73,6 +81,10 @@ OCR/model service quotas. Tune worker counts from measured memory and provider l
 processes currently multiply worker concurrency and cannot safely share all JSON history-index writes.
 No production throughput or maximum-user guarantee is made by the local concurrency tests.
 
+Local filesystem keys are checked after path resolution so stored objects cannot escape the configured
+storage root, including through symlinks. This protects the local adapter; Cloud Storage object names
+remain logical keys within the configured bucket.
+
 ## Verification
 
 Tests cover the full multi-file HTTP flow, original clause quotations, duplicate files, missing evidence,
@@ -80,3 +92,4 @@ conflicting policy identities, atomic queue limits, expired-lease recovery, stal
 AI draft citation/amount guards and downgrade behavior, an eight-request burst with a maximum of two active workers, HTTP 429 backpressure and transient retry.
 The existing feature suite and browser-authentication tests are also run. Live cloud services and visual
 browser rendering require separate verification; this session had no connected browser.
+
