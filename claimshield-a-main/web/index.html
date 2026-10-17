@@ -8,6 +8,25 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7z' fill='%230f766e'/></svg>">
 </head>
 <body>
+  <aside class="app-sidebar" aria-label="Main navigation">
+    <a class="sidebar-brand" href="#start"><span class="brand-mark" aria-hidden="true">✓</span><span><strong>ClaimShield</strong><small>AI CLAIM AUDIT</small></span></a>
+    <div class="workspace-chip"><i></i> DEMO WORKSPACE</div>
+    <p class="sidebar-label">WORKSPACE</p>
+    <nav class="sidebar-nav">
+      <a class="active" href="#start"><span>▦</span> Overview</a>
+      <a href="#start"><span>＋</span> New claim audit</a>
+      <a href="#results"><span>▤</span> Audit findings</a>
+      <a href="#claim-dashboard-panel" data-disclosure="claim-dashboard-panel"><span>◷</span> Claim history</a>
+    </nav>
+    <p class="sidebar-label tools-label">CLAIM TOOLS</p>
+    <nav class="sidebar-nav">
+      <a href="#document-check-panel" data-disclosure="document-check-panel"><span>✓</span> Document checker</a>
+      <a href="#preauth-panel" data-disclosure="preauth-panel"><span>◈</span> Pre-authorization</a>
+      <a href="#policy-explainer-panel" data-disclosure="policy-explainer-panel"><span>⌕</span> Policy assistant</a>
+      <a href="#rejection-panel" data-disclosure="rejection-panel"><span>↗</span> Denial support</a>
+    </nav>
+    <div class="sidebar-bottom"><div class="secure-card"><span>♧ &nbsp; Private workspace</span><p>Your documents stay in your authenticated claim workspace.</p></div><div class="profile-row"><span class="profile-avatar">C</span><span><b>Claim member</b><small>Personal workspace</small></span><span class="profile-more">···</span></div></div>
+  </aside>
   <header class="topbar">
     <div class="brand">
       <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7z" fill="currentColor"/><path d="m10.5 16.2 3.8 3.8 7.4-8" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -343,6 +362,17 @@
     ClaimShield AI flags items <em>worth disputing</em>. It does not give legal advice or allege fraud.
     The demo bills, policies, people and hospitals are synthetic.
   </footer>
-  <script src="/app.js"></script>
+  <script>
+  document.querySelectorAll('.sidebar-nav a[data-disclosure]').forEach(link => link.addEventListener('click', () => {
+    const id = link.dataset.disclosure;
+    const disclosure = document.querySelector(`[data-tool="${id}"]`);
+    if (disclosure) disclosure.open = true;
+  }));
+  document.querySelectorAll('.sidebar-nav a').forEach(link => link.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar-nav a').forEach(item => item.classList.remove('active'));
+    link.classList.add('active');
+  }));
+</script>
+<script src="/app.js"></script>
 </body>
 </html>
