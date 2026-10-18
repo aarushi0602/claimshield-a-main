@@ -1249,4 +1249,7 @@ def _healthcare_openapi():
 
 
 app.openapi = _healthcare_openapi
-app.mount("/", StaticFiles(directory=PROJECT_ROOT / "web", html=True), name="web")
+# The web UI is the React app in frontend/, built into web/ (`make ui`, or the Dockerfile's
+# Node stage). The API still starts without a build so backend work and tests don't need Node.
+if (PROJECT_ROOT / "web" / "index.html").exists():
+    app.mount("/", StaticFiles(directory=PROJECT_ROOT / "web", html=True), name="web")

@@ -5,3 +5,5 @@ var
 .pytest_cache
 **/__pycache__
 tests
+frontend/node_modules
+web

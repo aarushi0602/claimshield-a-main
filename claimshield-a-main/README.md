@@ -28,12 +28,12 @@ Built for the Google Cloud AI hackathon, **BFSI theme** (intelligent risk, fraud
 
 ## Evidence details
 
-Each finding in `GET /api/cases/{id}` now includes an additive `evidence` object. It maps affected bill lines to their uploaded document key, extracted source row, and page when the parser provides it; policy citations are marked verified only when the clause ID, source name, and text match a clause in the parsed policy. Missing or mismatched evidence is reported as unavailable/partial, not reconstructed. Arithmetic checks include their input values and calculation steps. Existing fields and generated PDF reports remain unchanged for older clients. The browser shows page references rather than in-PDF highlights because the current vanilla frontend has no PDF rendering/highlighting library.
+Each finding in `GET /api/cases/{id}` now includes an additive `evidence` object. It maps affected bill lines to their uploaded document key, extracted source row, and page when the parser provides it; policy citations are marked verified only when the clause ID, source name, and text match a clause in the parsed policy. Missing or mismatched evidence is reported as unavailable/partial, not reconstructed. Arithmetic checks include their input values and calculation steps. Existing fields and generated PDF reports remain unchanged for older clients. The browser shows page references rather than in-PDF highlights because the frontend has no PDF rendering/highlighting library.
 
 ## Architecture
 
 ```
-Browser (web/)  --POST /api/audit-->  FastAPI on Cloud Run  --SSE /events-->  live agent trace
+React UI (web/) --POST /api/audit-->  FastAPI on Cloud Run  --SSE /events-->  live agent trace
                                           |
                     ADK  claimshield_orchestrator (SequentialAgent)
                       â”œâ”€ intake_agent          Document AI -> normalised bill + policy JSON; rows -> BigQuery
@@ -68,7 +68,9 @@ claimshield/
   sql/         duplicates Â· arithmetic Â· benchmark_outliers Â· upcoding Â· schema_bigquery
   reports/     pdf.py (reconciliation report + letters)
   api/main.py  FastAPI + static UI
-web/           index.html Â· app.js Â· styles.css (no build step)
+frontend/      React + TypeScript + Tailwind UI (Vite); builds into web/ (git-ignored)
+  e2e/         Playwright end-to-end tests that drive the site with the demo kit
+demo-kit/      mock claim documents for the video demo and E2E tests (see demo-kit/README.md)
 data/
   generate.py  synthetic bills/policies generator (with planted issues)
   reference/   reference_pricing.csv Â· procedure_benchmarks.csv
@@ -85,12 +87,26 @@ make setup                 # python3.11 venv + deps
 cp .env.example .env       # all cloud flags false by default
 make test                  # answer key, money math, API, guards, isolation and CLI tests
 make samples               # run all 4 synthetic bills, print findings
+make ui                    # build the React UI into web/ (needs Node 20+)
 make run                   # http://localhost:8080
 ```
 
-Open the UI, pick a sample case (or upload a bill and a policy PDF) and press **Audit**. `CLAIMSHIELD_DEMO_PACE=0.35` in `.env` slows the trace so it can be followed live. Local mode otherwise finishes in about a second.
+Open the UI, pick a sample case (or upload a bill and a policy PDF) and press **Run claim audit**. The API still starts without `make ui`, but only `/api` is served until the UI is built. `CLAIMSHIELD_DEMO_PACE=0.35` in `.env` slows the trace so it can be followed live. Local mode otherwise finishes in about a second.
 
-To run in Docker on Linux instead: `make docker`. The local demo uses host networking
+### Frontend development
+
+The UI lives in `frontend/` (React 19, TypeScript, Tailwind CSS v4, Vite) and follows the *Clinical Precision Fintech* design system. Views use hash routes (`#/audit/new`, `#/cases/<id>`, `#/tools/...`) because FastAPI serves a single static `index.html`. Old `/?case=<id>` links still redirect.
+
+```bash
+make run                   # API on :8080 (terminal 1)
+make ui-dev                # Vite on http://localhost:5173 with hot reload, proxying /api (terminal 2)
+make ui-test               # Vitest unit tests (API client auth handling, results rendering)
+cd frontend && npm run build && npm run e2e   # Playwright E2E with the demo kit (uses local Chrome)
+```
+
+`SCREENSHOTS=1 npm run e2e` also saves a full-page screenshot of every screen to `demo-kit/screens/`, which is handy for slides. `E2E_VIDEO=1` records videos.
+
+To run in Docker on Linux instead: `make docker`. The image builds the UI in a Node stage. The local demo uses host networking
 and binds to loopback. Docker Desktop requires its host-networking feature to be enabled;
 otherwise use the native Windows setup below. Do not publish a demo container externally.
 

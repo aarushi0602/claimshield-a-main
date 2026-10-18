@@ -1,7 +1,7 @@
 PY ?= .venv/bin/python
 PORT ?= 8080
 
-.PHONY: setup data run test samples docker gcp-setup bq-load index-policies deploy
+.PHONY: setup data run test samples docker gcp-setup bq-load index-policies deploy ui ui-dev ui-test
 
 setup:            ## create the virtualenv and install everything
 	python3.11 -m venv .venv
@@ -14,13 +14,23 @@ data:             ## regenerate the synthetic bills, policies and answer key
 run:              ## start the API + web UI on http://localhost:$(PORT)
 	$(PY) -m uvicorn claimshield.api.main:app --reload --port $(PORT)
 
-test:             ## run the test suite (local mode)
+test:             ## run the backend and UI test suites (local mode)
 	$(PY) -m pytest -q
+	cd frontend && npm test
+
+ui:               ## install UI deps and build the React app into web/ (served by `make run`)
+	cd frontend && npm ci && npm run build
+
+ui-dev:           ## React dev server on :5173 with hot reload, proxying /api to `make run`
+	cd frontend && CLAIMSHIELD_API=http://localhost:$(PORT) npm run dev
+
+ui-test:          ## UI unit tests (Vitest)
+	cd frontend && npm test
 
 samples:          ## run every synthetic bill through the agents and print findings
 	$(PY) -W ignore scripts/run_samples.py
 
-docker:           ## build and run the container locally
+docker:           ## build (UI + API) and run the container locally
 	docker build -t claimshield-ai .
 	docker run --rm --network host -e CLAIMSHIELD_AUTH_MODE=demo -e CLAIMSHIELD_DEMO_PACE=0.35 claimshield-ai python -m uvicorn claimshield.api.main:app --host 127.0.0.1 --port $(PORT)
 
