@@ -5,3 +5,12 @@ __pycache__/
 var/
 .env
 .DS_Store
+
+# React build output (frontend/ -> web/) and its dependencies
+web/
+frontend/node_modules/
+
+# Playwright output and E2E screenshots (regenerate with SCREENSHOTS=1 npm run e2e)
+frontend/test-results/
+frontend/playwright-report/
+demo-kit/screens/

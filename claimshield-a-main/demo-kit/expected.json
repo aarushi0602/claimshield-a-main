@@ -1,0 +1,54 @@
+{
+  "bill": "01_hospital_final_bill_aarogya.pdf",
+  "policy": "06_policy_wording_niramaya_health_plus.pdf",
+  "findings": [
+    {
+      "type": "QUANTITY_MISMATCH",
+      "lines": [
+        1
+      ],
+      "confidence": "High"
+    },
+    {
+      "type": "DUPLICATE_CHARGE",
+      "lines": [
+        4,
+        5
+      ],
+      "confidence": "High"
+    },
+    {
+      "type": "ARITHMETIC_ERROR",
+      "lines": [
+        10
+      ],
+      "confidence": "High"
+    },
+    {
+      "type": "UPCODING_SIGNAL",
+      "lines": [
+        9
+      ],
+      "confidence": "Worth reviewing"
+    },
+    {
+      "type": "COVERAGE_MISMATCH",
+      "lines": [
+        13
+      ],
+      "confidence": "High",
+      "topic": "non_medical"
+    },
+    {
+      "type": "COVERAGE_MISMATCH",
+      "lines": [],
+      "confidence": "High",
+      "topic": "copay"
+    }
+  ],
+  "settlement": {
+    "gross": 133540,
+    "insurer_approved": 105192.0,
+    "patient_payable": 28348.0
+  }
+}

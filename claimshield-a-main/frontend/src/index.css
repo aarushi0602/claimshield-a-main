@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+/* Clinical Precision Fintech design tokens (stitch_claimshield_ai_redesign/DESIGN.md). */
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-canvas: #f4f8fc;
+  --color-surface: #ffffff;
+  --color-navy: #123b5d;
+  --color-navy-deep: #002541;
+  --color-action: #1769aa;
+  --color-action-hover: #125386;
+  --color-action-active: #0e3f66;
+  --color-action-soft: #eff6ff;
+  --color-row-selected: #f0f7ff;
+  --color-teal: #0d9488;
+  --color-teal-soft: #ccfbf1;
+  --color-ink: #172b3a;
+  --color-muted: #64748b;
+  --color-line: #e2e8f0;
+  --color-line-strong: #cbd5e1;
+  --color-subtle: #f8fafc;
+  --color-neutral-bg: #f1f5f9;
+  --color-neutral: #475569;
+  --color-success: #15803d;
+  --color-success-bg: #dcfce7;
+  --color-warning: #b45309;
+  --color-warning-bg: #fef3c7;
+  --color-danger: #b91c1c;
+  --color-danger-bg: #fee2e2;
+  --color-container: #e5eeff;
+  --color-container-low: #eff4ff;
+
+  --text-headline-xl: 2rem;
+  --text-headline-xl--line-height: 2.5rem;
+  --text-headline-xl--letter-spacing: -0.025em;
+  --text-headline-xl--font-weight: 700;
+  --text-headline-lg: 1.5rem;
+  --text-headline-lg--line-height: 2rem;
+  --text-headline-lg--letter-spacing: -0.02em;
+  --text-headline-lg--font-weight: 600;
+  --text-headline-md: 1.25rem;
+  --text-headline-md--line-height: 1.75rem;
+  --text-headline-md--letter-spacing: -0.015em;
+  --text-headline-md--font-weight: 600;
+  --text-headline-sm: 1.125rem;
+  --text-headline-sm--line-height: 1.5rem;
+  --text-headline-sm--font-weight: 600;
+  --text-body-lg: 1rem;
+  --text-body-lg--line-height: 1.5rem;
+  --text-body-md: 0.875rem;
+  --text-body-md--line-height: 1.375rem;
+  --text-body-sm: 0.75rem;
+  --text-body-sm--line-height: 1.125rem;
+  --text-label-md: 0.8125rem;
+  --text-label-md--line-height: 1rem;
+  --text-label-md--letter-spacing: 0.01em;
+  --text-label-md--font-weight: 600;
+  --text-label-sm: 0.6875rem;
+  --text-label-sm--line-height: 0.875rem;
+  --text-label-sm--letter-spacing: 0.04em;
+  --text-label-sm--font-weight: 600;
+
+  --shadow-z1: 0 1px 3px 0 rgba(18, 59, 93, 0.04), 0 1px 2px -1px rgba(18, 59, 93, 0.03);
+  --shadow-z2: 0 4px 6px -1px rgba(18, 59, 93, 0.07), 0 2px 4px -2px rgba(18, 59, 93, 0.05);
+  --shadow-z3: 0 10px 15px -3px rgba(18, 59, 93, 0.08), 0 4px 6px -4px rgba(18, 59, 93, 0.04);
+  --shadow-paper: 0 4px 12px rgba(18, 59, 93, 0.08);
+
+  --animate-pulse-dot: pulse-dot 1.2s ease-in-out infinite;
+  --animate-flash-row: flash-row 1.6s ease-out;
+  @keyframes pulse-dot { 50% { opacity: 0.35; } }
+  @keyframes flash-row { 0%, 35% { background-color: #fde68a; } }
+}
+
+@layer base {
+  html { -webkit-font-smoothing: antialiased; }
+  body {
+    @apply bg-canvas text-ink font-sans text-body-md;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  :focus-visible { outline: 2px solid var(--color-action); outline-offset: 2px; }
+  summary { cursor: pointer; }
+  ::selection { background: #cfe3f7; }
+}
+
+@utility tnum { font-variant-numeric: tabular-nums; }
+@utility reading { max-width: 68ch; line-height: 1.5rem; }

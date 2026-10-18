@@ -1,0 +1,3825 @@
+{
+ "case_id": "case-demo-fixture",
+ "status": "complete",
+ "bill": {
+  "bill_number": "AMH/IP/26/20417",
+  "hospital": "Aarogya Multispeciality Hospital",
+  "hospital_address": "No. 18, Outer Ring Road, Marathahalli, Bengaluru 560037 (fictional)",
+  "region": "",
+  "network_hospital": true,
+  "patient_name": "Meera Krishnan",
+  "patient_age": 41,
+  "policy_number": "NHP-2026-207731",
+  "insurer_tpa": "Sahyadri General / CareLink",
+  "admission_date": "2026-09-21",
+  "discharge_date": "2026-09-24",
+  "diagnosis": "Acute appendicitis",
+  "procedure": "Laparoscopic appendectomy",
+  "line_items": [
+   {
+    "line_no": 1,
+    "service_date": "2026-09-21",
+    "code": "RM-TWN",
+    "description": "Room charges - Twin sharing",
+    "dept": "Room",
+    "category": "ROOM",
+    "unit": "per_day",
+    "qty": 4.0,
+    "unit_price": 4200.0,
+    "amount": 16800.0,
+    "source_page": 1,
+    "source_text": "1 | 2026-09-21 | RM-TWN | Room charges - Twin sharing | Room | 4 | 4,200 | 16,800",
+    "normalized_description": "",
+    "strength": "",
+    "dosage_form": "",
+    "pack_size": "",
+    "manufacturer": "",
+    "price_basis": "unknown"
+   },
+   {
+    "line_no": 2,
+    "service_date": "2026-09-21",
+    "code": "CON-SPL",
+    "description": "Specialist consultation (General Surgery)",
+    "dept": "Consultation",
+    "category": "CONSULT",
+    "unit": "per_visit",
+    "qty": 3.0,
+    "unit_price": 1500.0,
+    "amount": 4500.0,
+    "source_page": 1,
+    "source_text": "2 | 2026-09-21 | CON-SPL | Specialist consultation (General Surgery) | Consultation | 3 | 1,500 | 4,500",
+    "normalized_description": "",
+    "strength": "",
+    "dosage_form": "",
+    "pack_size": "",
+    "manufacturer": "",
+    "price_basis": "unknown"
+   },
+   {
+    "line_no": 3,
+    "service_date": "2026-09-21",
+    "code": "LAB-CBC",
+    "description": "Complete blood count (CBC)",
+    "dept": "Laboratory",
+    "category": "LAB",
+    "unit": "per_test",
+    "qty": 1.0,
+    "unit_price": 450.0,
+    "amount": 450.0,
+    "source_page": 1,
+    "source_text": "3 | 2026-09-21 | LAB-CBC | Complete blood count (CBC) | Laboratory | 1 | 450 | 450",
+    "normalized_description": "",
+    "strength": "",
+    "dosage_form": "",
+    "pack_size": "",
+    "manufacturer": "",
+    "price_basis": "unknown"
+   },
+   {
+    "line_no": 4,
+    "service_date": "2026-09-21",
+    "code": "LAB-CRP",
+    "description": "C-reactive protein (CRP)",
+    "dept": "Laboratory",
+    "category": "LAB",
+    "unit": "per_test",
+    "qty": 1.0,
+    "unit_price": 700.0,
+    "amount": 700.0,
+    "source_page": 1,
+    "source_text": "4 | 2026-09-21 | LAB-CRP | C-reactive protein (CRP) | Laboratory | 1 | 700 | 700",
+    "normalized_description": "",
+    "strength": "",
+    "dosage_form": "",
+    "pack_size": "",
+    "manufacturer": "",
+    "price_basis": "unknown"
+   },
+   {
+    "line_no": 5,
+    "service_date": "2026-09-21",
+    "code": "LAB-CRP",
+    "description": "C-reactive protein (CRP)",
+    "dept": "Laboratory",
+    "category": "LAB",
+    "unit": "per_test",
+    "qty": 1.0,
+    "unit_price": 700.0,
+    "amount": 700.0,
+    "source_page": 1,
+    "source_text": "5 | 2026-09-21 | LAB-CRP | C-reactive protein (CRP) | Laboratory | 1 | 700 | 700",
+    "normalized_description": "",
+    "strength": "",
+    "dosage_form": "",
+    "pack_size": "",
+    "manufacturer": "",
+    "price_basis": "unknown"
+   },
+   {
+    "line_no": 6,
+    "service_date": "2026-09-21",
+    "code": "RAD-USG",
+    "description": "USG abdomen",
+    "dept": "Radiology",
+    "category": "RADIOLOGY",
+    "unit": "per_scan",
+    "qty": 1.0,
+    "unit_price": 1800.0,
+    "amount": 1800.0,
+    "source_page": 1,
+    "source_text": "6 | 2026-09-21 | RAD-USG | USG abdomen | Radiology | 1 | 1,800 | 1,800",
+    "normalized_description": "",
+    "strength": "",
+    "dosage_form": "",
+    "pack_size": "",
+    "manufacturer": "",
+    "price_basis": "unknown"
+   },
+   {
+    "line_no": 7,
+    "service_date": "2026-09-22",
+    "code": "OT-LAP-APP",
+    "description": "Laparoscopic appendectomy - surgeon fee",
+    "dept": "Surgery",
+    "category": "PROCEDURE",
+    "unit": "per_procedure",
+    "qty": 1.0,
+    "unit_price": 58000.0,
+    "amount": 58000.0,
+    "source_page": 1,
+    "source_text": "7 | 2026-09-22 | OT-LAP-APP | Laparoscopic appendectomy - surgeon fee | Surgery | 1 | 58,000 | 58,000",
+    "normalized_description": "",
+    "strength": "",
+    "dosage_form": "",
+    "pack_size": "",
+    "manufacturer": "",
+    "price_basis": "unknown"
+   },
+   {
+    "line_no": 8,
+    "service_date": "2026-09-22",
+    "code": "OT-CHG",
+    "description": "Operation theatre charges",
+    "dept": "Operation Theatre",
+    "category": "PROCEDURE",
+    "unit": "per_procedure",
+    "qty": 1.0,
+    "unit_price": 19500.0,
+    "amount": 19500.0,
+    "source_page": 1,
+    "source_text": "8 | 2026-09-22 | OT-CHG | Operation theatre charges | Operation Theatre | 1 | 19,500 | 19,500",
+    "normalized_description": "",
+    "strength": "",
+    "dosage_form": "",
+    "pack_size": "",
+    "manufacturer": "",
+    "price_basis": "unknown"
+   },
+   {
+    "line_no": 9,
+    "service_date": "2026-09-22",
+    "code": "ANS-GA-4",
+    "description": "Anaesthesia - General, complex (Grade IV)",
+    "dept": "Anaesthesia",
+    "category": "ANAESTHESIA",
+    "unit": "per_item",
+    "qty": 1.0,
+    "unit_price": 23000.0,
+    "amount": 23000.0,
+    "source_page": 1,
+    "source_text": "9 | 2026-09-22 | ANS-GA-4 | Anaesthesia - General, complex (Grade IV) | Anaesthesia | 1 | 23,000 | 23,000",
+    "normalized_description": "",
+    "strength": "",
+    "dosage_form": "",
+    "pack_size": "",
+    "manufacturer": "",
+    "price_basis": "unknown"
+   },
+   {
+    "line_no": 10,
+    "service_date": "2026-09-22",
+    "code": "PH-CEF1G",
+    "description": "Inj. Ceftriaxone 1g",
+    "dept": "Pharmacy",
+    "category": "PHARMACY",
+    "unit": "per_item",
+    "qty": 8.0,
+    "unit_price": 180.0,
+    "amount": 2160.0,
+    "source_page": 1,
+    "source_text": "10 | 2026-09-22 | PH-CEF1G | Inj. Ceftriaxone 1g | Pharmacy | 8 | 180 | 2,160",
+    "normalized_description": "",
+    "strength": "",
+    "dosage_form": "",
+    "pack_size": "",
+    "manufacturer": "",
+    "price_basis": "unknown"
+   },
+   {
+    "line_no": 11,
+    "service_date": "2026-09-22",
+    "code": "PH-PCM-IV",
+    "description": "Inj. Paracetamol 1g IV",
+    "dept": "Pharmacy",
+    "category": "PHARMACY",
+    "unit": "per_item",
+    "qty": 4.0,
+    "unit_price": 120.0,
+    "amount": 480.0,
+    "source_page": 1,
+    "source_text": "11 | 2026-09-22 | PH-PCM-IV | Inj. Paracetamol 1g IV | Pharmacy | 4 | 120 | 480",
+    "normalized_description": "",
+    "strength": "",
+    "dosage_form": "",
+    "pack_size": "",
+    "manufacturer": "",
+    "price_basis": "unknown"
+   },
+   {
+    "line_no": 12,
+    "service_date": "2026-09-22",
+    "code": "CS-KIT",
+    "description": "Surgical consumables kit",
+    "dept": "Consumables",
+    "category": "CONSUMABLE",
+    "unit": "per_item",
+    "qty": 1.0,
+    "unit_price": 3400.0,
+    "amount": 3400.0,
+    "source_page": 1,
+    "source_text": "12 | 2026-09-22 | CS-KIT | Surgical consumables kit | Consumables | 1 | 3,400 | 3,400",
+    "normalized_description": "",
+    "strength": "",
+    "dosage_form": "",
+    "pack_size": "",
+    "manufacturer": "",
+    "price_basis": "unknown"
+   },
+   {
+    "line_no": 13,
+    "service_date": "2026-09-22",
+    "code": "NM-PPE",
+    "description": "Gloves and masks pack",
+    "dept": "Non-Medical",
+    "category": "NON_MEDICAL",
+    "unit": "per_item",
+    "qty": 1.0,
+    "unit_price": 1150.0,
+    "amount": 1150.0,
+    "source_page": 1,
+    "source_text": "13 | 2026-09-22 | NM-PPE | Gloves and masks pack | Non-Medical | 1 | 1,150 | 1,150",
+    "normalized_description": "",
+    "strength": "",
+    "dosage_form": "",
+    "pack_size": "",
+    "manufacturer": "",
+    "price_basis": "unknown"
+   },
+   {
+    "line_no": 14,
+    "service_date": "2026-09-23",
+    "code": "NM-ATF",
+    "description": "Attendant food",
+    "dept": "Non-Medical",
+    "category": "PERSONAL",
+    "unit": "per_item",
+    "qty": 3.0,
+    "unit_price": 300.0,
+    "amount": 900.0,
+    "source_page": 1,
+    "source_text": "14 | 2026-09-23 | NM-ATF | Attendant food | Non-Medical | 3 | 300 | 900",
+    "normalized_description": "",
+    "strength": "",
+    "dosage_form": "",
+    "pack_size": "",
+    "manufacturer": "",
+    "price_basis": "unknown"
+   }
+  ],
+  "stated_gross_total": 133540.0,
+  "deductions": [
+   {
+    "label": "Non-payable items",
+    "basis": "Gloves and masks pack; Attendant food",
+    "amount": 2050.0
+   },
+   {
+    "label": "Co-payment",
+    "basis": "20% of admissible amount",
+    "amount": 26298.0
+   }
+  ],
+  "insurer_approved": 105192.0,
+  "patient_payable": 28348.0,
+  "facility_category": "",
+  "room_category": "",
+  "admission_days": null,
+  "actual_room_rent_per_day": null
+ },
+ "policy_terms": {
+  "sum_insured": 500000.0,
+  "room_rent_limit": 5000.0,
+  "icu_rent_limit": 10000.0,
+  "copay_network_pct": 0.0,
+  "copay_non_network_pct": 20.0,
+  "copay_senior_pct": 10.0,
+  "senior_age": 61,
+  "sub_limits": [
+   {
+    "procedure": "Cataract surgery",
+    "amount": 40000.0,
+    "basis": "eye"
+   },
+   {
+    "procedure": "Treatment of kidney stones",
+    "amount": 60000.0,
+    "basis": "claim"
+   }
+  ],
+  "non_medical_covered": true,
+  "personal_items_excluded": true,
+  "clause_refs": {
+   "sum_insured": "1.1",
+   "room_rent": "3.1",
+   "copay": "3.2",
+   "sub_limit": "3.3",
+   "non_medical": "3.4",
+   "personal_items": "4.4",
+   "actually_incurred": "2.3",
+   "reasonable_customary": "2.2",
+   "grievance": "5.2"
+  },
+  "extraction": "rules",
+  "uncertain_topics": [],
+  "room_rent_limit_type": null,
+  "room_rent_limit_pct": null
+ },
+ "findings": [
+  {
+   "finding_id": "F1",
+   "type": "COVERAGE_MISMATCH",
+   "title": "Co-payment applied that the policy doesn't require",
+   "bill_lines": [],
+   "bill_evidence": "Co-payment: 20% of admissible amount (\u20b926,298)",
+   "policy": {
+    "clause_id": "3.2",
+    "title": "Co-payment",
+    "quote": "No co-payment applies to claims for treatment taken at a Network Hospital. A co-payment of 20% of the admissible claim amount applies to treatment taken at a Non-Network Hospital. An additional co-payment of 10% applies where the Insured Person is aged 61 years or above at the time of admission.",
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "page": 1,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896"
+   },
+   "explanation": "The insurer deducted a 20% co-payment. For this claim (network, patient aged 41) the policy's co-payment is 0%.",
+   "confidence": "High",
+   "impact": 26528.0,
+   "counterparty": "insurer",
+   "bill_correction": 0.0,
+   "correction_line": null,
+   "detected_by": "audit_agent",
+   "method": "policy rule replay",
+   "topic": "copay",
+   "evidence": {
+    "status": "partial",
+    "bill_document_id": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/0.pdf",
+    "bill_lines": [],
+    "policy": {
+     "status": "verified",
+     "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+     "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+     "source": "06_policy_wording_niramaya_health_plus.pdf",
+     "clause_id": "3.2",
+     "title": "Co-payment",
+     "page": 1,
+     "text": "No co-payment applies to claims for treatment taken at a Network Hospital. A co-payment of 20% of the admissible claim amount applies to treatment taken at a Non-Network Hospital. An additional co-payment of 10% applies where the Insured Person is aged 61 years or above at the time of admission."
+    },
+    "calculation": {
+     "status": "partial",
+     "currency": "INR",
+     "steps": [
+      {
+       "label": "Recorded finding impact",
+       "inputs": {
+        "finding_id": "F1"
+       },
+       "result": 26528.0
+      }
+     ],
+     "total": 26528.0
+    },
+    "confidence": "High"
+   },
+   "benchmark": null
+  },
+  {
+   "finding_id": "F2",
+   "type": "QUANTITY_MISMATCH",
+   "title": "Room charged for more days than the stay",
+   "bill_lines": [
+    1
+   ],
+   "bill_evidence": "Line 1: Room charges - Twin sharing x4 days; admitted 2026-09-21, discharged 2026-09-24 (3 nights)",
+   "policy": {
+    "clause_id": "2.3",
+    "title": "Expenses Actually Incurred",
+    "quote": "Only expenses actually incurred by the Insured Person for services actually rendered are payable. Duplicate entries, and amounts arising from arithmetical errors in the hospital bill, are not expenses actually incurred.",
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "page": 1,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896"
+   },
+   "explanation": "The stay was 3 nights but the room is billed for 4 days. The extra 1 day(s) come to \u20b94,200.",
+   "confidence": "High",
+   "impact": 4200.0,
+   "counterparty": "hospital",
+   "bill_correction": 4200.0,
+   "correction_line": 1,
+   "detected_by": "audit_agent",
+   "method": "length-of-stay rule",
+   "topic": "",
+   "evidence": {
+    "status": "verified",
+    "bill_document_id": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/0.pdf",
+    "bill_lines": [
+     {
+      "line_no": 1,
+      "document_id": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/0.pdf",
+      "page": 1,
+      "page_status": "verified",
+      "source_text": "1 | 2026-09-21 | RM-TWN | Room charges - Twin sharing | Room | 4 | 4,200 | 16,800",
+      "description": "Room charges - Twin sharing",
+      "quantity": 4.0,
+      "unit_rate": 4200.0,
+      "amount": 16800.0
+     }
+    ],
+    "policy": {
+     "status": "verified",
+     "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+     "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+     "source": "06_policy_wording_niramaya_health_plus.pdf",
+     "clause_id": "2.3",
+     "title": "Expenses Actually Incurred",
+     "page": 1,
+     "text": "Only expenses actually incurred by the Insured Person for services actually rendered are payable. Duplicate entries, and amounts arising from arithmetical errors in the hospital bill, are not expenses actually incurred."
+    },
+    "calculation": {
+     "status": "verified",
+     "currency": "INR",
+     "steps": [
+      {
+       "label": "Excess billed room days \u00d7 selected room rate",
+       "inputs": {
+        "billed_days": 4.0,
+        "allowed_nights": 3,
+        "rate": 4200.0
+       },
+       "result": 4200.0
+      }
+     ],
+     "total": 4200.0
+    },
+    "confidence": "High"
+   },
+   "benchmark": null
+  },
+  {
+   "finding_id": "F3",
+   "type": "COVERAGE_MISMATCH",
+   "title": "Covered item deducted as non-payable",
+   "bill_lines": [
+    13
+   ],
+   "bill_evidence": "Non-payable items: Gloves and masks pack; Attendant food (\u20b92,050); includes line 13 Gloves and masks pack (\u20b91,150)",
+   "policy": {
+    "clause_id": "3.4",
+    "title": "Consumables Benefit",
+    "quote": "Notwithstanding the list of non-payable items in Annexure II, non-medical items and consumables (including admission kits, gloves, masks and similar items) incurred during a covered hospitalisation are payable under this policy.",
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "page": 1,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896"
+   },
+   "explanation": "The insurer treated line 13 Gloves and masks pack (\u20b91,150) as non-payable, but policy 3.4 (Consumables Benefit) makes these items payable during a covered hospitalisation.",
+   "confidence": "High",
+   "impact": 920.0,
+   "counterparty": "insurer",
+   "bill_correction": 0.0,
+   "correction_line": null,
+   "detected_by": "audit_agent",
+   "method": "policy rule replay",
+   "topic": "non_medical",
+   "evidence": {
+    "status": "partial",
+    "bill_document_id": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/0.pdf",
+    "bill_lines": [
+     {
+      "line_no": 13,
+      "document_id": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/0.pdf",
+      "page": 1,
+      "page_status": "verified",
+      "source_text": "13 | 2026-09-22 | NM-PPE | Gloves and masks pack | Non-Medical | 1 | 1,150 | 1,150",
+      "description": "Gloves and masks pack",
+      "quantity": 1.0,
+      "unit_rate": 1150.0,
+      "amount": 1150.0
+     }
+    ],
+    "policy": {
+     "status": "verified",
+     "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+     "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+     "source": "06_policy_wording_niramaya_health_plus.pdf",
+     "clause_id": "3.4",
+     "title": "Consumables Benefit",
+     "page": 1,
+     "text": "Notwithstanding the list of non-payable items in Annexure II, non-medical items and consumables (including admission kits, gloves, masks and similar items) incurred during a covered hospitalisation are payable under this policy."
+    },
+    "calculation": {
+     "status": "partial",
+     "currency": "INR",
+     "steps": [
+      {
+       "label": "Recorded finding impact",
+       "inputs": {
+        "finding_id": "F3"
+       },
+       "result": 920.0
+      }
+     ],
+     "total": 920.0
+    },
+    "confidence": "High"
+   },
+   "benchmark": null
+  },
+  {
+   "finding_id": "F4",
+   "type": "ARITHMETIC_ERROR",
+   "title": "Inj. Ceftriaxone 1g: amount doesn't match quantity x rate",
+   "bill_lines": [
+    10
+   ],
+   "bill_evidence": "Line 10: 8 x \u20b9180 = \u20b91,440, but billed \u20b92,160",
+   "policy": {
+    "clause_id": "2.3",
+    "title": "Expenses Actually Incurred",
+    "quote": "Only expenses actually incurred by the Insured Person for services actually rendered are payable. Duplicate entries, and amounts arising from arithmetical errors in the hospital bill, are not expenses actually incurred.",
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "page": 1,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896"
+   },
+   "explanation": "8 units at \u20b9180 come to \u20b91,440, but the bill charges \u20b92,160, \u20b9720 more.",
+   "confidence": "High",
+   "impact": 720.0,
+   "counterparty": "hospital",
+   "bill_correction": 720.0,
+   "correction_line": 10,
+   "detected_by": "audit_agent",
+   "method": "BigQuery SQL (arithmetic.sql)",
+   "topic": "",
+   "evidence": {
+    "status": "verified",
+    "bill_document_id": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/0.pdf",
+    "bill_lines": [
+     {
+      "line_no": 10,
+      "document_id": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/0.pdf",
+      "page": 1,
+      "page_status": "verified",
+      "source_text": "10 | 2026-09-22 | PH-CEF1G | Inj. Ceftriaxone 1g | Pharmacy | 8 | 180 | 2,160",
+      "description": "Inj. Ceftriaxone 1g",
+      "quantity": 8.0,
+      "unit_rate": 180.0,
+      "amount": 2160.0
+     }
+    ],
+    "policy": {
+     "status": "verified",
+     "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+     "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+     "source": "06_policy_wording_niramaya_health_plus.pdf",
+     "clause_id": "2.3",
+     "title": "Expenses Actually Incurred",
+     "page": 1,
+     "text": "Only expenses actually incurred by the Insured Person for services actually rendered are payable. Duplicate entries, and amounts arising from arithmetical errors in the hospital bill, are not expenses actually incurred."
+    },
+    "calculation": {
+     "status": "verified",
+     "currency": "INR",
+     "steps": [
+      {
+       "label": "Quantity \u00d7 unit rate",
+       "inputs": {
+        "quantity": 8.0,
+        "unit_rate": 180.0
+       },
+       "result": 1440.0
+      },
+      {
+       "label": "Billed amount \u2212 expected amount",
+       "inputs": {
+        "billed": 2160.0,
+        "expected": 1440.0
+       },
+       "result": 720.0
+      }
+     ],
+     "total": 720.0
+    },
+    "confidence": "High"
+   },
+   "benchmark": null
+  },
+  {
+   "finding_id": "F5",
+   "type": "DUPLICATE_CHARGE",
+   "title": "C-reactive protein (CRP) charged 2 times on 2026-09-21",
+   "bill_lines": [
+    4,
+    5
+   ],
+   "bill_evidence": "Line 4: 2026-09-21 LAB-CRP C-reactive protein (CRP) x1 @ \u20b9700 = \u20b9700; Line 5: 2026-09-21 LAB-CRP C-reactive protein (CRP) x1 @ \u20b9700 = \u20b9700",
+   "policy": {
+    "clause_id": "2.3",
+    "title": "Expenses Actually Incurred",
+    "quote": "Only expenses actually incurred by the Insured Person for services actually rendered are payable. Duplicate entries, and amounts arising from arithmetical errors in the hospital bill, are not expenses actually incurred.",
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "page": 1,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896"
+   },
+   "explanation": "Lines 4, 5 charge the same service on the same day at the same price. Unless the test or service was genuinely performed twice, one entry is a duplicate.",
+   "confidence": "High",
+   "impact": 700.0,
+   "counterparty": "hospital",
+   "bill_correction": 700.0,
+   "correction_line": 5,
+   "detected_by": "audit_agent",
+   "method": "BigQuery SQL (duplicates.sql)",
+   "topic": "",
+   "evidence": {
+    "status": "verified",
+    "bill_document_id": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/0.pdf",
+    "bill_lines": [
+     {
+      "line_no": 4,
+      "document_id": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/0.pdf",
+      "page": 1,
+      "page_status": "verified",
+      "source_text": "4 | 2026-09-21 | LAB-CRP | C-reactive protein (CRP) | Laboratory | 1 | 700 | 700",
+      "description": "C-reactive protein (CRP)",
+      "quantity": 1.0,
+      "unit_rate": 700.0,
+      "amount": 700.0
+     },
+     {
+      "line_no": 5,
+      "document_id": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/0.pdf",
+      "page": 1,
+      "page_status": "verified",
+      "source_text": "5 | 2026-09-21 | LAB-CRP | C-reactive protein (CRP) | Laboratory | 1 | 700 | 700",
+      "description": "C-reactive protein (CRP)",
+      "quantity": 1.0,
+      "unit_rate": 700.0,
+      "amount": 700.0
+     }
+    ],
+    "policy": {
+     "status": "verified",
+     "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+     "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+     "source": "06_policy_wording_niramaya_health_plus.pdf",
+     "clause_id": "2.3",
+     "title": "Expenses Actually Incurred",
+     "page": 1,
+     "text": "Only expenses actually incurred by the Insured Person for services actually rendered are payable. Duplicate entries, and amounts arising from arithmetical errors in the hospital bill, are not expenses actually incurred."
+    },
+    "calculation": {
+     "status": "verified",
+     "currency": "INR",
+     "steps": [
+      {
+       "label": "Repeated charge \u00d7 extra occurrences",
+       "inputs": {
+        "charge": 700.0,
+        "extra_occurrences": 1
+       },
+       "result": 700.0
+      }
+     ],
+     "total": 700.0
+    },
+    "confidence": "High"
+   },
+   "benchmark": null
+  },
+  {
+   "finding_id": "F6",
+   "type": "UPCODING_SIGNAL",
+   "title": "Anaesthesia - General, complex (Grade IV) looks higher-grade than usual",
+   "bill_lines": [
+    9
+   ],
+   "bill_evidence": "Line 9: ANS-GA-4 Anaesthesia - General, complex (Grade IV) = \u20b923,000 (tier 4; typical for this procedure: ANS-GA-2, up to tier 2, 90th percentile \u20b912,000)",
+   "policy": {
+    "clause_id": "2.2",
+    "title": "Reasonable and Customary Charges",
+    "quote": "Charges for services or supplies which are the standard charges for the specific provider and consistent with the prevailing charges in the geographical area for identical or similar services.",
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "page": 1,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896"
+   },
+   "explanation": "Uncomplicated laparoscopic appendectomy is typically performed under standard general anaesthesia (Grade II). This bill uses Anaesthesia - General, complex (Grade IV). That can be justified by complications, so ask the hospital for the anaesthesia/procedure record. If it was a standard case, the typical charge is up to \u20b912,000.",
+   "confidence": "Worth reviewing",
+   "impact": 11000.0,
+   "counterparty": "hospital",
+   "bill_correction": 11000.0,
+   "correction_line": 9,
+   "detected_by": "benchmark_agent",
+   "method": "BigQuery SQL (upcoding.sql) vs procedure_benchmarks",
+   "topic": "",
+   "evidence": {
+    "status": "partial",
+    "bill_document_id": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/0.pdf",
+    "bill_lines": [
+     {
+      "line_no": 9,
+      "document_id": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/0.pdf",
+      "page": 1,
+      "page_status": "verified",
+      "source_text": "9 | 2026-09-22 | ANS-GA-4 | Anaesthesia - General, complex (Grade IV) | Anaesthesia | 1 | 23,000 | 23,000",
+      "description": "Anaesthesia - General, complex (Grade IV)",
+      "quantity": 1.0,
+      "unit_rate": 23000.0,
+      "amount": 23000.0
+     }
+    ],
+    "policy": {
+     "status": "verified",
+     "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+     "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+     "source": "06_policy_wording_niramaya_health_plus.pdf",
+     "clause_id": "2.2",
+     "title": "Reasonable and Customary Charges",
+     "page": 1,
+     "text": "Charges for services or supplies which are the standard charges for the specific provider and consistent with the prevailing charges in the geographical area for identical or similar services."
+    },
+    "calculation": {
+     "status": "partial",
+     "currency": "INR",
+     "steps": [
+      {
+       "label": "Recorded finding impact",
+       "inputs": {
+        "finding_id": "F6"
+       },
+       "result": 11000.0
+      }
+     ],
+     "total": 11000.0
+    },
+    "confidence": "Worth reviewing"
+   },
+   "benchmark": null
+  }
+ ],
+ "benchmark_comparisons": [
+  {
+   "line_no": 1,
+   "code": "RM-TWN",
+   "description": "Room charges - Twin sharing",
+   "procedure": "Laparoscopic appendectomy",
+   "region": "tier-2",
+   "region_basis": "dataset default region; hospital region unavailable",
+   "unit": "per_day",
+   "quantity": 4.0,
+   "billed_unit_rate": 4200.0,
+   "comparison_range": {
+    "p50": 3500.0,
+    "p90": 4800.0
+   },
+   "price_source": "synthetic-benchmark-2026",
+   "price_type": "informational",
+   "provider_id": "",
+   "reference_date": "2026-01-01",
+   "dataset_version": "synthetic-2026.1",
+   "dataset_label": "Synthetic informational benchmark data for testing and demonstration; not a contracted tariff or authoritative local price list.",
+   "comparable": true,
+   "status": "comparable",
+   "missing_reason": null,
+   "confidence_label": null
+  },
+  {
+   "line_no": 2,
+   "code": "CON-SPL",
+   "description": "Specialist consultation (General Surgery)",
+   "procedure": "Laparoscopic appendectomy",
+   "region": "tier-2",
+   "region_basis": "dataset default region; hospital region unavailable",
+   "unit": "per_visit",
+   "quantity": 3.0,
+   "billed_unit_rate": 1500.0,
+   "comparison_range": {
+    "p50": 1200.0,
+    "p90": 1800.0
+   },
+   "price_source": "synthetic-benchmark-2026",
+   "price_type": "informational",
+   "provider_id": "",
+   "reference_date": "2026-01-01",
+   "dataset_version": "synthetic-2026.1",
+   "dataset_label": "Synthetic informational benchmark data for testing and demonstration; not a contracted tariff or authoritative local price list.",
+   "comparable": true,
+   "status": "comparable",
+   "missing_reason": null,
+   "confidence_label": null
+  },
+  {
+   "line_no": 3,
+   "code": "LAB-CBC",
+   "description": "Complete blood count (CBC)",
+   "procedure": "Laparoscopic appendectomy",
+   "region": "tier-2",
+   "region_basis": "dataset default region; hospital region unavailable",
+   "unit": "per_test",
+   "quantity": 1.0,
+   "billed_unit_rate": 450.0,
+   "comparison_range": {
+    "p50": 350.0,
+    "p90": 550.0
+   },
+   "price_source": "synthetic-benchmark-2026",
+   "price_type": "informational",
+   "provider_id": "",
+   "reference_date": "2026-01-01",
+   "dataset_version": "synthetic-2026.1",
+   "dataset_label": "Synthetic informational benchmark data for testing and demonstration; not a contracted tariff or authoritative local price list.",
+   "comparable": true,
+   "status": "comparable",
+   "missing_reason": null,
+   "confidence_label": null
+  },
+  {
+   "line_no": 4,
+   "code": "LAB-CRP",
+   "description": "C-reactive protein (CRP)",
+   "procedure": "Laparoscopic appendectomy",
+   "region": "tier-2",
+   "region_basis": "dataset default region; hospital region unavailable",
+   "unit": "per_test",
+   "quantity": 1.0,
+   "billed_unit_rate": 700.0,
+   "comparison_range": {
+    "p50": 550.0,
+    "p90": 850.0
+   },
+   "price_source": "synthetic-benchmark-2026",
+   "price_type": "informational",
+   "provider_id": "",
+   "reference_date": "2026-01-01",
+   "dataset_version": "synthetic-2026.1",
+   "dataset_label": "Synthetic informational benchmark data for testing and demonstration; not a contracted tariff or authoritative local price list.",
+   "comparable": true,
+   "status": "comparable",
+   "missing_reason": null,
+   "confidence_label": null
+  },
+  {
+   "line_no": 5,
+   "code": "LAB-CRP",
+   "description": "C-reactive protein (CRP)",
+   "procedure": "Laparoscopic appendectomy",
+   "region": "tier-2",
+   "region_basis": "dataset default region; hospital region unavailable",
+   "unit": "per_test",
+   "quantity": 1.0,
+   "billed_unit_rate": 700.0,
+   "comparison_range": {
+    "p50": 550.0,
+    "p90": 850.0
+   },
+   "price_source": "synthetic-benchmark-2026",
+   "price_type": "informational",
+   "provider_id": "",
+   "reference_date": "2026-01-01",
+   "dataset_version": "synthetic-2026.1",
+   "dataset_label": "Synthetic informational benchmark data for testing and demonstration; not a contracted tariff or authoritative local price list.",
+   "comparable": true,
+   "status": "comparable",
+   "missing_reason": null,
+   "confidence_label": null
+  },
+  {
+   "line_no": 6,
+   "code": "RAD-USG",
+   "description": "USG abdomen",
+   "procedure": "Laparoscopic appendectomy",
+   "region": "tier-2",
+   "region_basis": "dataset default region; hospital region unavailable",
+   "unit": "per_scan",
+   "quantity": 1.0,
+   "billed_unit_rate": 1800.0,
+   "comparison_range": {
+    "p50": 1400.0,
+    "p90": 2200.0
+   },
+   "price_source": "synthetic-benchmark-2026",
+   "price_type": "informational",
+   "provider_id": "",
+   "reference_date": "2026-01-01",
+   "dataset_version": "synthetic-2026.1",
+   "dataset_label": "Synthetic informational benchmark data for testing and demonstration; not a contracted tariff or authoritative local price list.",
+   "comparable": true,
+   "status": "comparable",
+   "missing_reason": null,
+   "confidence_label": null
+  },
+  {
+   "line_no": 7,
+   "code": "OT-LAP-APP",
+   "description": "Laparoscopic appendectomy - surgeon fee",
+   "procedure": "Laparoscopic appendectomy",
+   "region": "tier-2",
+   "region_basis": "dataset default region; hospital region unavailable",
+   "unit": "per_procedure",
+   "quantity": 1.0,
+   "billed_unit_rate": 58000.0,
+   "comparison_range": {
+    "p50": 45000.0,
+    "p90": 65000.0
+   },
+   "price_source": "synthetic-benchmark-2026",
+   "price_type": "informational",
+   "provider_id": "",
+   "reference_date": "2026-01-01",
+   "dataset_version": "synthetic-2026.1",
+   "dataset_label": "Synthetic informational benchmark data for testing and demonstration; not a contracted tariff or authoritative local price list.",
+   "comparable": true,
+   "status": "comparable",
+   "missing_reason": null,
+   "confidence_label": null
+  },
+  {
+   "line_no": 8,
+   "code": "OT-CHG",
+   "description": "Operation theatre charges",
+   "procedure": "Laparoscopic appendectomy",
+   "region": "tier-2",
+   "region_basis": "dataset default region; hospital region unavailable",
+   "unit": "per_procedure",
+   "quantity": 1.0,
+   "billed_unit_rate": 19500.0,
+   "comparison_range": {
+    "p50": 12000.0,
+    "p90": 28000.0
+   },
+   "price_source": "synthetic-benchmark-2026",
+   "price_type": "informational",
+   "provider_id": "",
+   "reference_date": "2026-01-01",
+   "dataset_version": "synthetic-2026.1",
+   "dataset_label": "Synthetic informational benchmark data for testing and demonstration; not a contracted tariff or authoritative local price list.",
+   "comparable": true,
+   "status": "comparable",
+   "missing_reason": null,
+   "confidence_label": null
+  },
+  {
+   "line_no": 9,
+   "code": "ANS-GA-4",
+   "description": "Anaesthesia - General, complex (Grade IV)",
+   "procedure": "Laparoscopic appendectomy",
+   "region": "tier-2",
+   "region_basis": "dataset default region; hospital region unavailable",
+   "unit": "per_item",
+   "quantity": 1.0,
+   "billed_unit_rate": 23000.0,
+   "comparison_range": {
+    "p50": 18000.0,
+    "p90": 25000.0
+   },
+   "price_source": "synthetic-benchmark-2026",
+   "price_type": "informational",
+   "provider_id": "",
+   "reference_date": "2026-01-01",
+   "dataset_version": "synthetic-2026.1",
+   "dataset_label": "Synthetic informational benchmark data for testing and demonstration; not a contracted tariff or authoritative local price list.",
+   "comparable": true,
+   "status": "comparable",
+   "missing_reason": null,
+   "confidence_label": null
+  },
+  {
+   "line_no": 10,
+   "code": "PH-CEF1G",
+   "description": "Inj. Ceftriaxone 1g",
+   "procedure": "Laparoscopic appendectomy",
+   "region": "tier-2",
+   "region_basis": "dataset default region; hospital region unavailable",
+   "unit": "per_item",
+   "quantity": 8.0,
+   "billed_unit_rate": 180.0,
+   "comparison_range": {
+    "p50": 140.0,
+    "p90": 220.0
+   },
+   "price_source": "synthetic-benchmark-2026",
+   "price_type": "informational",
+   "provider_id": "",
+   "reference_date": "2026-01-01",
+   "dataset_version": "synthetic-2026.1",
+   "dataset_label": "Synthetic informational benchmark data for testing and demonstration; not a contracted tariff or authoritative local price list.",
+   "comparable": true,
+   "status": "comparable",
+   "missing_reason": null,
+   "confidence_label": null
+  },
+  {
+   "line_no": 11,
+   "code": "PH-PCM-IV",
+   "description": "Inj. Paracetamol 1g IV",
+   "procedure": "Laparoscopic appendectomy",
+   "region": "tier-2",
+   "region_basis": "dataset default region; hospital region unavailable",
+   "unit": "per_item",
+   "quantity": 4.0,
+   "billed_unit_rate": 120.0,
+   "comparison_range": {
+    "p50": 90.0,
+    "p90": 150.0
+   },
+   "price_source": "synthetic-benchmark-2026",
+   "price_type": "informational",
+   "provider_id": "",
+   "reference_date": "2026-01-01",
+   "dataset_version": "synthetic-2026.1",
+   "dataset_label": "Synthetic informational benchmark data for testing and demonstration; not a contracted tariff or authoritative local price list.",
+   "comparable": true,
+   "status": "comparable",
+   "missing_reason": null,
+   "confidence_label": null
+  },
+  {
+   "line_no": 12,
+   "code": "CS-KIT",
+   "description": "Surgical consumables kit",
+   "procedure": "Laparoscopic appendectomy",
+   "region": "tier-2",
+   "region_basis": "dataset default region; hospital region unavailable",
+   "unit": "per_item",
+   "quantity": 1.0,
+   "billed_unit_rate": 3400.0,
+   "comparison_range": {
+    "p50": 2500.0,
+    "p90": 4000.0
+   },
+   "price_source": "synthetic-benchmark-2026",
+   "price_type": "informational",
+   "provider_id": "",
+   "reference_date": "2026-01-01",
+   "dataset_version": "synthetic-2026.1",
+   "dataset_label": "Synthetic informational benchmark data for testing and demonstration; not a contracted tariff or authoritative local price list.",
+   "comparable": true,
+   "status": "comparable",
+   "missing_reason": null,
+   "confidence_label": null
+  },
+  {
+   "line_no": 13,
+   "code": "NM-PPE",
+   "description": "Gloves and masks pack",
+   "procedure": "Laparoscopic appendectomy",
+   "region": "tier-2",
+   "region_basis": "dataset default region; hospital region unavailable",
+   "unit": "per_item",
+   "quantity": 1.0,
+   "billed_unit_rate": 1150.0,
+   "comparison_range": {
+    "p50": 900.0,
+    "p90": 1500.0
+   },
+   "price_source": "synthetic-benchmark-2026",
+   "price_type": "informational",
+   "provider_id": "",
+   "reference_date": "2026-01-01",
+   "dataset_version": "synthetic-2026.1",
+   "dataset_label": "Synthetic informational benchmark data for testing and demonstration; not a contracted tariff or authoritative local price list.",
+   "comparable": true,
+   "status": "comparable",
+   "missing_reason": null,
+   "confidence_label": null
+  },
+  {
+   "line_no": 14,
+   "code": "NM-ATF",
+   "description": "Attendant food",
+   "procedure": "Laparoscopic appendectomy",
+   "region": "tier-2",
+   "region_basis": "dataset default region; hospital region unavailable",
+   "unit": "per_item",
+   "quantity": 3.0,
+   "billed_unit_rate": 300.0,
+   "comparison_range": {
+    "p50": 250.0,
+    "p90": 400.0
+   },
+   "price_source": "synthetic-benchmark-2026",
+   "price_type": "informational",
+   "provider_id": "",
+   "reference_date": "2026-01-01",
+   "dataset_version": "synthetic-2026.1",
+   "dataset_label": "Synthetic informational benchmark data for testing and demonstration; not a contracted tariff or authoritative local price list.",
+   "comparable": true,
+   "status": "comparable",
+   "missing_reason": null,
+   "confidence_label": null
+  }
+ ],
+ "reconciliation": {
+  "billed_gross": 133540.0,
+  "insurer_paid": 105192.0,
+  "patient_paid": 28348.0,
+  "hospital_overcharge_high": 5620.0,
+  "hospital_overcharge_all": 16620.0,
+  "insurer_shortfall": 27448.0,
+  "fair_bill_high": 127920.0,
+  "fair_insurer_payable_high": 127020.0,
+  "fair_patient_payable_high": 900.0,
+  "fair_patient_payable_all": 900.0,
+  "recovery_likely": 27448.0,
+  "recovery_upper": 27448.0,
+  "entitlement_as_billed": {
+   "gross": 133540.0,
+   "non_payable": 900.0,
+   "non_payable_lines": [
+    14
+   ],
+   "room_excess": 0.0,
+   "admissible": 132640.0,
+   "sub_limit_applied": null,
+   "after_sub_limit": 132640.0,
+   "copay_pct": 0.0,
+   "copay": 0.0,
+   "insurer_payable": 132640.0,
+   "patient_payable": 900.0
+  },
+  "entitlement_fair": {
+   "gross": 127920.0,
+   "non_payable": 900.0,
+   "non_payable_lines": [
+    14
+   ],
+   "room_excess": 0.0,
+   "admissible": 127020.0,
+   "sub_limit_applied": null,
+   "after_sub_limit": 127020.0,
+   "copay_pct": 0.0,
+   "copay": 0.0,
+   "insurer_payable": 127020.0,
+   "patient_payable": 900.0
+  },
+  "notes": [
+   "Correcting the hospital overcharges also lowers the insurer's share by \u20b95,620, which stays available in your sum insured."
+  ]
+ },
+ "letters": [
+  {
+   "recipient": "insurer",
+   "to": "The Grievance Redressal Officer, Sahyadri General Insurance Ltd. (fictional)",
+   "subject": "Request to re-assess cashless claim settlement - Policy NHP-2026-207731, Meera Krishnan, bill AMH/IP/26/20417",
+   "body": "Dear Sir/Madam,\n\nI am writing about the cashless settlement of my claim for treatment at Aarogya Multispeciality Hospital from 21 Sep 2026 to 24 Sep 2026 (Laparoscopic appendectomy), bill no. AMH/IP/26/20417. Against a final bill of \u20b91,33,540, \u20b91,05,192 was approved and I was asked to pay \u20b928,348.\n\nI have compared the settlement with my policy wording, and the following deductions do not appear to be in line with the policy:\n\n1. Co-payment applied that the policy doesn't require. The insurer deducted a 20% co-payment. For this claim (network, patient aged 41) the policy's co-payment is 0%. (Policy clause 3.2, Co-payment: \"No co-payment applies to claims for treatment taken at a Network Hospital. A co-payment of 20% of the admissible claim amount applies to treatment taken at a Non-Network Hospital. An additional co-payment of 10%...\") Amount: \u20b926,528.\n\n2. Covered item deducted as non-payable (bill line 13). The insurer treated line 13 Gloves and masks pack (\u20b91,150) as non-payable, but policy 3.4 (Consumables Benefit) makes these items payable during a covered hospitalisation. (Policy clause 3.4, Consumables Benefit: \"Notwithstanding the list of non-payable items in Annexure II, non-medical items and consumables (including admission kits, gloves, masks and similar items) incurred during a covered hospitalisation are payable under...\") Amount: \u20b9920.\n\nI request that you re-assess the claim under the policy terms and release the additional \u20b927,448, or explain in writing the policy basis for each deduction above.\n\nThis letter is a grievance under clause 5.2 (Grievances) of my policy. If it isn't resolved, I will escalate it as that clause provides.\n\nEnclosed: final itemised hospital bill and settlement, policy schedule and wording, ClaimShield reconciliation report.\n\nYours faithfully,\nMeera Krishnan\nPolicy no. NHP-2026-207731\n[Phone] | [Email]",
+   "finding_ids": [
+    "F1",
+    "F3"
+   ]
+  },
+  {
+   "recipient": "hospital",
+   "to": "The Billing Department, Aarogya Multispeciality Hospital, No. 18, Outer Ring Road, Marathahalli, Bengaluru 560037 (fictional)",
+   "subject": "Request for a corrected final bill - bill no. AMH/IP/26/20417, patient Meera Krishnan",
+   "body": "Dear Billing Team,\n\nI am writing about my final bill no. AMH/IP/26/20417 for treatment from 21 Sep 2026 to 24 Sep 2026. On going through the itemised bill, I found entries that I believe need correcting.\n\nPlease correct the following:\n\n1. Room charged for more days than the stay (bill line 1). The stay was 3 nights but the room is billed for 4 days. The extra 1 day(s) come to \u20b94,200. Amount: \u20b94,200.\n\n2. Inj. Ceftriaxone 1g: amount doesn't match quantity x rate (bill line 10). 8 units at \u20b9180 come to \u20b91,440, but the bill charges \u20b92,160, \u20b9720 more. Amount: \u20b9720.\n\n3. C-reactive protein (CRP) charged 2 times on 2026-09-21 (bill lines 4, 5). Lines 4, 5 charge the same service on the same day at the same price. Unless the test or service was genuinely performed twice, one entry is a duplicate. Amount: \u20b9700.\n\nPlease also share the supporting records or justification for:\n\n- Anaesthesia - General, complex (Grade IV) looks higher-grade than usual (bill line 9). Uncomplicated laparoscopic appendectomy is typically performed under standard general anaesthesia (Grade II). This bill uses Anaesthesia - General, complex (Grade IV). That can be justified by complications, so ask the hospital for the anaesthesia/procedure record. If it was a standard case, the typical charge is up to \u20b912,000. Amount in question: \u20b911,000.\n\nPlease issue a revised final bill, send it to my insurer's TPA so the settlement can be revised, and refund any excess I have paid.\n\nYours faithfully,\nMeera Krishnan\n[Phone] | [Email]",
+   "finding_ids": [
+    "F2",
+    "F4",
+    "F5",
+    "F6"
+   ]
+  }
+ ],
+ "stack": {
+  "parsing": "pdfplumber (local)",
+  "warehouse": "SQLite (local stand-in for BigQuery)",
+  "retrieval": "BM25 over parsed clauses (local)",
+  "reasoning": "deterministic templates",
+  "storage": "local filesystem"
+ },
+ "bill_name": "01_hospital_final_bill_aarogya.pdf",
+ "policy_name": "06_policy_wording_niramaya_health_plus.pdf",
+ "claim_review": {
+  "status": "needs_verification",
+  "headline": "Your claim needs a few confirmations",
+  "notice": "This is an evidence review, not insurer approval or rejection. Recovery figures are audit scenarios, not guaranteed coverage. Where available, medical-to-clause comparisons are unconfirmed AI drafts, not clinical or coverage decisions.",
+  "ai_clause_review": {
+   "mode": "unavailable",
+   "proposals": [],
+   "notice": "AI medical-to-clause review is unavailable. No eligibility conclusion was inferred."
+  },
+  "clauses": [
+   {
+    "clause_id": "1.1",
+    "title": "Sum Insured",
+    "text": "The Sum Insured under this policy is Rs. 5,00,000 per policy year. All admissible claims in a policy year are payable up to the Sum Insured.",
+    "page": 1,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "needs_verification",
+    "topics": [
+     "sum_insured"
+    ],
+    "finding_ids": [],
+    "explanation": "This clause was extracted. Its full applicability to this claim still needs confirmation.",
+    "next_step": "Ask the insurer to confirm this clause against the treatment and policy schedule."
+   },
+   {
+    "clause_id": "1.2",
+    "title": "In-patient Hospitalisation",
+    "text": "The Company will pay Medical Expenses for In-patient Care incurred for hospitalisation of at least 24 consecutive hours, or for listed Day Care Procedures, for an illness or injury contracted during the policy period.",
+    "page": 1,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "needs_verification",
+    "topics": [],
+    "finding_ids": [],
+    "explanation": "This clause was extracted. Its full applicability to this claim still needs confirmation.",
+    "next_step": "Ask the insurer to confirm this clause against the treatment and policy schedule."
+   },
+   {
+    "clause_id": "2.1",
+    "title": "Medically Necessary Treatment",
+    "text": "Treatment that is required for the medical management of the illness or injury, does not exceed the level of care necessary to provide safe, adequate and appropriate medical care, and is prescribed by a Medical Practitioner.",
+    "page": 1,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "needs_verification",
+    "topics": [],
+    "finding_ids": [],
+    "explanation": "This clause was extracted. Its full applicability to this claim still needs confirmation.",
+    "next_step": "Ask the insurer to confirm this clause against the treatment and policy schedule."
+   },
+   {
+    "clause_id": "2.2",
+    "title": "Reasonable and Customary Charges",
+    "text": "Charges for services or supplies which are the standard charges for the specific provider and consistent with the prevailing charges in the geographical area for identical or similar services.",
+    "page": 1,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "review_finding",
+    "topics": [
+     "reasonable_customary"
+    ],
+    "finding_ids": [
+     "F6"
+    ],
+    "explanation": "Uncomplicated laparoscopic appendectomy is typically performed under standard general anaesthesia (Grade II). This bill uses Anaesthesia - General, complex (Grade IV). That can be justified by complications, so ask the hospital for the anaesthesia/procedure record. If it was a standard case, the typical charge is up to \u20b912,000.",
+    "next_step": "Review the cited evidence with the insurer."
+   },
+   {
+    "clause_id": "2.3",
+    "title": "Expenses Actually Incurred",
+    "text": "Only expenses actually incurred by the Insured Person for services actually rendered are payable. Duplicate entries, and amounts arising from arithmetical errors in the hospital bill, are not expenses actually incurred.",
+    "page": 1,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "review_finding",
+    "topics": [
+     "actually_incurred"
+    ],
+    "finding_ids": [
+     "F2",
+     "F4",
+     "F5"
+    ],
+    "explanation": "The stay was 3 nights but the room is billed for 4 days. The extra 1 day(s) come to \u20b94,200. 8 units at \u20b9180 come to \u20b91,440, but the bill charges \u20b92,160, \u20b9720 more. Lines 4, 5 charge the same service on the same day at the same price. Unless the test or service was genuinely performed twice, one entry is a duplicate.",
+    "next_step": "Review the cited evidence with the insurer."
+   },
+   {
+    "clause_id": "3.1",
+    "title": "Room Rent and ICU Charges",
+    "text": "Room rent for a normal room is payable up to 1% of the Sum Insured per day, i.e. Rs. 5,000 per day. ICU charges are payable up to 2% of the Sum Insured per day, i.e. Rs. 10,000 per day. If the Insured Person opts for a room with higher rent, only the excess room rent is non-payable; no proportionate deduction is applied to other charges.",
+    "page": 1,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "needs_verification",
+    "topics": [
+     "room_rent"
+    ],
+    "finding_ids": [],
+    "explanation": "This clause was extracted. Its full applicability to this claim still needs confirmation.",
+    "next_step": "Ask the insurer to confirm this clause against the treatment and policy schedule."
+   },
+   {
+    "clause_id": "3.2",
+    "title": "Co-payment",
+    "text": "No co-payment applies to claims for treatment taken at a Network Hospital. A co-payment of 20% of the admissible claim amount applies to treatment taken at a Non-Network Hospital. An additional co-payment of 10% applies where the Insured Person is aged 61 years or above at the time of admission.",
+    "page": 1,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "review_finding",
+    "topics": [
+     "copay"
+    ],
+    "finding_ids": [
+     "F1"
+    ],
+    "explanation": "The insurer deducted a 20% co-payment. For this claim (network, patient aged 41) the policy's co-payment is 0%.",
+    "next_step": "Review the cited evidence with the insurer."
+   },
+   {
+    "clause_id": "3.3",
+    "title": "Sub-limits",
+    "text": "The following sub-limits apply per policy year and are applied before any co-payment: (a) Cataract surgery: Rs. 40,000 per eye. (b) Treatment of kidney stones: Rs. 60,000 per claim.",
+    "page": 1,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "needs_verification",
+    "topics": [
+     "sub_limit"
+    ],
+    "finding_ids": [],
+    "explanation": "This clause was extracted. Its full applicability to this claim still needs confirmation.",
+    "next_step": "Ask the insurer to confirm this clause against the treatment and policy schedule."
+   },
+   {
+    "clause_id": "3.4",
+    "title": "Consumables Benefit",
+    "text": "Notwithstanding the list of non-payable items in Annexure II, non-medical items and consumables (including admission kits, gloves, masks and similar items) incurred during a covered hospitalisation are payable under this policy.",
+    "page": 1,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "review_finding",
+    "topics": [
+     "non_medical"
+    ],
+    "finding_ids": [
+     "F3"
+    ],
+    "explanation": "The insurer treated line 13 Gloves and masks pack (\u20b91,150) as non-payable, but policy 3.4 (Consumables Benefit) makes these items payable during a covered hospitalisation.",
+    "next_step": "Review the cited evidence with the insurer."
+   },
+   {
+    "clause_id": "4.1",
+    "title": "Cosmetic Treatment",
+    "text": "Expenses for cosmetic or aesthetic treatment of any description are not payable, unless required as part of reconstruction following an accident, burn or cancer.",
+    "page": 1,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "needs_verification",
+    "topics": [],
+    "finding_ids": [],
+    "explanation": "This clause was extracted. Its full applicability to this claim still needs confirmation.",
+    "next_step": "Ask the insurer to confirm this clause against the treatment and policy schedule."
+   },
+   {
+    "clause_id": "4.2",
+    "title": "Pre-existing Diseases",
+    "text": "Expenses related to a pre-existing disease are not payable until 36 months of continuous coverage have elapsed since the first policy with the Company.",
+    "page": 2,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "needs_verification",
+    "topics": [],
+    "finding_ids": [],
+    "explanation": "This clause was extracted. Its full applicability to this claim still needs confirmation.",
+    "next_step": "Ask the insurer to confirm this clause against the treatment and policy schedule."
+   },
+   {
+    "clause_id": "4.3",
+    "title": "Specified Disease Waiting Period",
+    "text": "Treatment of hernia, cataract and joint replacement is not payable during the first 24 months of continuous coverage, unless necessitated by an accident.",
+    "page": 2,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "needs_verification",
+    "topics": [],
+    "finding_ids": [],
+    "explanation": "This clause was extracted. Its full applicability to this claim still needs confirmation.",
+    "next_step": "Ask the insurer to confirm this clause against the treatment and policy schedule."
+   },
+   {
+    "clause_id": "4.4",
+    "title": "Personal Comfort Items",
+    "text": "Personal comfort and convenience items, including attendant food, television charges, telephone charges and toiletries, are not payable.",
+    "page": 2,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "needs_verification",
+    "topics": [
+     "personal_items"
+    ],
+    "finding_ids": [],
+    "explanation": "This clause was extracted. Its full applicability to this claim still needs confirmation.",
+    "next_step": "Ask the insurer to confirm this clause against the treatment and policy schedule."
+   },
+   {
+    "clause_id": "5.1",
+    "title": "Cashless Claims",
+    "text": "Cashless facility is available at Network Hospitals subject to pre-authorisation by the TPA. The final settlement will be made on the itemised final hospital bill.",
+    "page": 2,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "needs_verification",
+    "topics": [],
+    "finding_ids": [],
+    "explanation": "This clause was extracted. Its full applicability to this claim still needs confirmation.",
+    "next_step": "Ask the insurer to confirm this clause against the treatment and policy schedule."
+   },
+   {
+    "clause_id": "5.2",
+    "title": "Grievances",
+    "text": "If the Insured Person is not satisfied with a claim decision, a written grievance may be filed with the Company's Grievance Redressal Officer within 30 days of the decision. Unresolved grievances may be escalated to the Insurance Ombudsman.",
+    "page": 2,
+    "source": "06_policy_wording_niramaya_health_plus.pdf",
+    "score": 0.0,
+    "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+    "status": "needs_verification",
+    "topics": [
+     "grievance"
+    ],
+    "finding_ids": [],
+    "explanation": "This clause was extracted. Its full applicability to this claim still needs confirmation.",
+    "next_step": "Ask the insurer to confirm this clause against the treatment and policy schedule."
+   }
+  ],
+  "clause_count": 15,
+  "verification_gaps": [
+   "Additional insurance documents need reconciliation with the main wording. Endorsements and renewals may change coverage; use Policy history below.",
+   "Confirm the patient is insured and the policy was active on the treatment date.",
+   "Confirm waiting periods, pre-existing-condition terms and treatment exclusions.",
+   "Confirm remaining sum insured, earlier claims, deductible and hospital network status.",
+   "Have the insurer confirm medical necessity and any pre-authorization requirements."
+  ],
+  "document_check": {
+   "claim_type": "cashless",
+   "insurer": null,
+   "documents": [
+    {
+     "id": "D1",
+     "filename": "01_hospital_final_bill_aarogya.pdf",
+     "detected_type": "hospital_bill",
+     "type_label": "Hospital bill",
+     "status": "detected",
+     "reason": "Matched text indicators: in.patient final bill, itemi[sz]ed (?:charges|bill), qty\\s+.*amount",
+     "text_characters": 1895,
+     "fields_detected": [
+      "hospital/provider",
+      "patient/member name",
+      "bill/invoice number",
+      "itemized charges",
+      "total amount"
+     ],
+     "fields_not_detected": [],
+     "duplicate_of": null,
+     "evidence_excerpt": "Aarogya Multispeciality Hospital No. 18, Outer Ring Road, Marathahalli, Bengaluru 560037 (fictional) IN-PATIENT FINAL BILL (ITEMISED) Bill No AMH/IP/26/20417 Bill Date 2026-09-24 Patient Name Meera Krishnan Age / Sex 41 / F UHID AMH-0451187 Policy No NHP-2026-207731 Insurer / TPA Sahyadri General / CareLink Network Hospital Yes Admission 2026-09-21 Discharge",
+     "group": "medical",
+     "source_key": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/0.pdf"
+    },
+    {
+     "id": "D2",
+     "filename": "02_discharge_summary.pdf",
+     "detected_type": "discharge_summary",
+     "type_label": "Discharge summary",
+     "status": "detected",
+     "reason": "Matched text indicators: discharge summary, date of discharge, condition at discharge",
+     "text_characters": 1154,
+     "fields_detected": [
+      "patient/member name",
+      "admission date",
+      "discharge date",
+      "diagnosis",
+      "treatment/procedure"
+     ],
+     "fields_not_detected": [],
+     "duplicate_of": null,
+     "evidence_excerpt": "Aarogya Multispeciality Hospital No. 18, Outer Ring Road, Marathahalli, Bengaluru 560037 (fictional) DISCHARGE SUMMARY Patient Name Meera Krishnan Age / Sex 41 years / Female UHID AMH-0451187 Date of Admission 21-Sep-2026 Date of Discharge 24-Sep-2026 Consultant Dr. Arvind Rao, MS (General Surgery) Discharge Diagnosis Acute appendicitis, uncomplicated. Prese",
+     "group": "medical",
+     "source_key": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/1.pdf"
+    },
+    {
+     "id": "D3",
+     "filename": "03_lab_investigation_report.pdf",
+     "detected_type": "investigation_report",
+     "type_label": "Investigation report",
+     "status": "detected",
+     "reason": "Matched text indicators: investigation report, laboratory report, test results?",
+     "text_characters": 899,
+     "fields_detected": [
+      "patient/member name",
+      "test/investigation",
+      "result/findings",
+      "report date"
+     ],
+     "fields_not_detected": [],
+     "duplicate_of": null,
+     "evidence_excerpt": "Aarogya Multispeciality Hospital No. 18, Outer Ring Road, Marathahalli, Bengaluru 560037 (fictional) LABORATORY REPORT - INVESTIGATION REPORT Patient Name Meera Krishnan UHID AMH-0451187 Sample collection date 21-Sep-2026 Report date 21-Sep-2026 Referred by Dr. Arvind Rao Test results Test name Result Units Reference range Total leucocyte count 14,200 cells/",
+     "group": "medical",
+     "source_key": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/2.pdf"
+    },
+    {
+     "id": "D4",
+     "filename": "04_prescription.pdf",
+     "detected_type": "prescription",
+     "type_label": "Prescription",
+     "status": "detected",
+     "reason": "Matched text indicators: prescription, \\brx\\b, medication:",
+     "text_characters": 686,
+     "fields_detected": [
+      "patient name",
+      "prescriber/doctor",
+      "prescription date",
+      "medication details"
+     ],
+     "fields_not_detected": [],
+     "duplicate_of": null,
+     "evidence_excerpt": "Aarogya Multispeciality Hospital No. 18, Outer Ring Road, Marathahalli, Bengaluru 560037 (fictional) PRESCRIPTION - DISCHARGE MEDICATION Patient Meera Krishnan Date 24-Sep-2026 Prescriber: Dr. Arvind Rao, MS (General Surgery), Reg. No. KMC-48812 (fictional) Rx Medication: Medicine Dose Instructions Duration Tab. Cefuroxime 500 mg 1 tablet Take one tablet two",
+     "group": "medical",
+     "source_key": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/3.pdf"
+    },
+    {
+     "id": "D5",
+     "filename": "05_claim_form.pdf",
+     "detected_type": "claim_form",
+     "type_label": "Claim form",
+     "status": "detected",
+     "reason": "Matched text indicators: health insurance claim form, claim form, claimant details",
+     "text_characters": 759,
+     "fields_detected": [
+      "claimant/patient name",
+      "policy number",
+      "claim number",
+      "signature"
+     ],
+     "fields_not_detected": [],
+     "duplicate_of": null,
+     "evidence_excerpt": "Sahyadri General Insurance Ltd. (fictional) HEALTH INSURANCE CLAIM FORM - PART A (to be filled by the insured) Claimant details Claimant / insured name Meera Krishnan Policy number NHP-2026-207731 Claim number CL-NHP-26-0098341 TPA CareLink Health TPA (fictional) Contact [Phone] | [Email] Details of claim Hospital Aarogya Multispeciality Hospital, Bengaluru ",
+     "group": "medical",
+     "source_key": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/4.pdf"
+    },
+    {
+     "id": "D6",
+     "filename": "06_policy_wording_niramaya_health_plus.pdf",
+     "detected_type": "policy_document",
+     "type_label": "Policy document",
+     "status": "detected",
+     "reason": "Matched text indicators: policy wordings, policy wording, sum insured",
+     "text_characters": 4082,
+     "fields_detected": [
+      "policy number",
+      "plan/insurer name",
+      "sum insured or coverage terms"
+     ],
+     "fields_not_detected": [],
+     "duplicate_of": null,
+     "evidence_excerpt": "Sahyadri General Insurance Ltd. (fictional) Niramaya Health Plus - Policy Wordings Policy Schedule Policy Number NHP-2026-207731 Plan Niramaya Health Plus - Individual Sum Insured Rs. 5,00,000 per policy year Policy Period 01-Jun-2026 to 31-May-2027 Insured Person Meera Krishnan (fictional), age 41 TPA CareLink Health TPA (fictional) Section 1 - Cover 1.1 Su",
+     "group": "insurance",
+     "source_key": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/5.pdf"
+    },
+    {
+     "id": "D7",
+     "filename": "07_policy_renewal_schedule.pdf",
+     "detected_type": "policy_document",
+     "type_label": "Policy document",
+     "status": "detected",
+     "reason": "Matched text indicators: policy wording, sum insured, policy schedule",
+     "text_characters": 681,
+     "fields_detected": [
+      "policy number",
+      "plan/insurer name",
+      "sum insured or coverage terms"
+     ],
+     "fields_not_detected": [],
+     "duplicate_of": null,
+     "evidence_excerpt": "Sahyadri General Insurance Ltd. (fictional) Niramaya Health Plus - Renewal Policy Schedule Policy Number NHP-2026-207731 Plan Niramaya Health Plus - Individual Insured Person Meera Krishnan Policy Start Date 01-Jun-2026 Policy Expiry Date 31-May-2027 Renewal Date 01-Jun-2026 Previous policy NHP-2025-207731 (01-Jun-2025 to 31-May-2026) Sum Insured Rs. 5,00,00",
+     "group": "insurance",
+     "source_key": "cases/case-221bcc0f5ca44d8fa41d010e39d5a60d/uploads/6.pdf"
+    }
+   ],
+   "checklist": [
+    {
+     "document_type": "hospital_bill",
+     "label": "Hospital bill",
+     "status": "complete",
+     "requirement_kind": "required generic recommendation",
+     "verified": false,
+     "source": "Generic checklist configuration",
+     "note": "A matching document and the configured key fields were detected in extracted text.",
+     "document_id": "D1",
+     "fields_not_detected": []
+    },
+    {
+     "document_type": "discharge_summary",
+     "label": "Discharge summary",
+     "status": "complete",
+     "requirement_kind": "required generic recommendation",
+     "verified": false,
+     "source": "Generic checklist configuration",
+     "note": "A matching document and the configured key fields were detected in extracted text.",
+     "document_id": "D2",
+     "fields_not_detected": []
+    },
+    {
+     "document_type": "claim_form",
+     "label": "Claim form",
+     "status": "complete",
+     "requirement_kind": "required generic recommendation",
+     "verified": false,
+     "source": "Generic checklist configuration",
+     "note": "A matching document and the configured key fields were detected in extracted text.",
+     "document_id": "D5",
+     "fields_not_detected": []
+    },
+    {
+     "document_type": "policy_document",
+     "label": "Policy document",
+     "status": "complete",
+     "requirement_kind": "required generic recommendation",
+     "verified": false,
+     "source": "Generic checklist configuration",
+     "note": "A matching document and the configured key fields were detected in extracted text.",
+     "document_id": "D7",
+     "fields_not_detected": []
+    },
+    {
+     "document_type": "prescription",
+     "label": "Prescription",
+     "status": "complete",
+     "requirement_kind": "recommended generic document",
+     "verified": false,
+     "source": "Generic checklist configuration",
+     "note": "A matching document and the configured key fields were detected in extracted text.",
+     "document_id": "D4",
+     "fields_not_detected": []
+    },
+    {
+     "document_type": "investigation_report",
+     "label": "Investigation report",
+     "status": "complete",
+     "requirement_kind": "recommended generic document",
+     "verified": false,
+     "source": "Generic checklist configuration",
+     "note": "A matching document and the configured key fields were detected in extracted text.",
+     "document_id": "D3",
+     "fields_not_detected": []
+    }
+   ],
+   "summary": {
+    "complete": 6,
+    "missing": 0,
+    "uncertain": 0
+   },
+   "generic_recommendations_notice": "Generic checklist entries are recommendations, not verified insurer requirements.",
+   "export_csv": "Document,Status,Requirement type,Verified,Source,Note\r\nHospital bill,complete,required generic recommendation,False,Generic checklist configuration,A matching document and the configured key fields were detected in extracted text.\r\nDischarge summary,complete,required generic recommendation,False,Generic checklist configuration,A matching document and the configured key fields were detected in extracted text.\r\nClaim form,complete,required generic recommendation,False,Generic checklist configuration,A matching document and the configured key fields were detected in extracted text.\r\nPolicy document,complete,required generic recommendation,False,Generic checklist configuration,A matching document and the configured key fields were detected in extracted text.\r\nPrescription,complete,recommended generic document,False,Generic checklist configuration,A matching document and the configured key fields were detected in extracted text.\r\nInvestigation report,complete,recommended generic document,False,Generic checklist configuration,A matching document and the configured key fields were detected in extracted text.\r\n",
+   "warnings": []
+  },
+  "next_steps": [
+   {
+    "priority": "Verify coverage",
+    "title": "Additional insurance documents need reconciliation with the main wording. Endorsements and renewals may change coverage; use Policy history below.",
+    "detail": "This is unresolved, not a claim rejection.",
+    "basis": "Evidence gap",
+    "tool": "policy-history-panel"
+   },
+   {
+    "priority": "Verify coverage",
+    "title": "Confirm the patient is insured and the policy was active on the treatment date.",
+    "detail": "This is unresolved, not a claim rejection.",
+    "basis": "Evidence gap",
+    "tool": "policy-explainer-panel"
+   },
+   {
+    "priority": "Verify coverage",
+    "title": "Confirm waiting periods, pre-existing-condition terms and treatment exclusions.",
+    "detail": "This is unresolved, not a claim rejection.",
+    "basis": "Evidence gap",
+    "tool": "policy-explainer-panel"
+   },
+   {
+    "priority": "Verify coverage",
+    "title": "Confirm remaining sum insured, earlier claims, deductible and hospital network status.",
+    "detail": "This is unresolved, not a claim rejection.",
+    "basis": "Evidence gap",
+    "tool": "policy-explainer-panel"
+   },
+   {
+    "priority": "Verify coverage",
+    "title": "Have the insurer confirm medical necessity and any pre-authorization requirements.",
+    "detail": "This is unresolved, not a claim rejection.",
+    "basis": "Evidence gap",
+    "tool": "policy-explainer-panel"
+   },
+   {
+    "priority": "Review potential recovery",
+    "title": "Co-payment applied that the policy doesn't require",
+    "detail": "The insurer deducted a 20% co-payment. For this claim (network, patient aged 41) the policy's co-payment is 0%.",
+    "basis": "High",
+    "finding_id": "F1",
+    "tool": "findings-panel"
+   },
+   {
+    "priority": "Review potential recovery",
+    "title": "Room charged for more days than the stay",
+    "detail": "The stay was 3 nights but the room is billed for 4 days. The extra 1 day(s) come to \u20b94,200.",
+    "basis": "High",
+    "finding_id": "F2",
+    "tool": "findings-panel"
+   },
+   {
+    "priority": "Review potential recovery",
+    "title": "Covered item deducted as non-payable",
+    "detail": "The insurer treated line 13 Gloves and masks pack (\u20b91,150) as non-payable, but policy 3.4 (Consumables Benefit) makes these items payable during a covered hospitalisation.",
+    "basis": "High",
+    "finding_id": "F3",
+    "tool": "findings-panel"
+   },
+   {
+    "priority": "Review potential recovery",
+    "title": "Inj. Ceftriaxone 1g: amount doesn't match quantity x rate",
+    "detail": "8 units at \u20b9180 come to \u20b91,440, but the bill charges \u20b92,160, \u20b9720 more.",
+    "basis": "High",
+    "finding_id": "F4",
+    "tool": "findings-panel"
+   },
+   {
+    "priority": "Review potential recovery",
+    "title": "C-reactive protein (CRP) charged 2 times on 2026-09-21",
+    "detail": "Lines 4, 5 charge the same service on the same day at the same price. Unless the test or service was genuinely performed twice, one entry is a duplicate.",
+    "basis": "High",
+    "finding_id": "F5",
+    "tool": "findings-panel"
+   },
+   {
+    "priority": "Review potential recovery",
+    "title": "Anaesthesia - General, complex (Grade IV) looks higher-grade than usual",
+    "detail": "Uncomplicated laparoscopic appendectomy is typically performed under standard general anaesthesia (Grade II). This bill uses Anaesthesia - General, complex (Grade IV). That can be justified by complications, so ask the hospital for the anaesthesia/procedure record. If it was a standard case, the typical charge is up to \u20b912,000.",
+    "basis": "Worth reviewing",
+    "finding_id": "F6",
+    "tool": "findings-panel"
+   },
+   {
+    "priority": "Submit and track",
+    "title": "Send a complete claim pack to the insurer or hospital insurance desk.",
+    "detail": "Keep the submission acknowledgement and claim number. Record queries and respond with the requested evidence. Review any draft before sending.",
+    "basis": "Next step after verification",
+    "tool": "timeline-panel"
+   }
+  ],
+  "expenses": [
+   {
+    "line_no": 1,
+    "description": "Room charges - Twin sharing",
+    "status": "needs_verification"
+   },
+   {
+    "line_no": 2,
+    "description": "Specialist consultation (General Surgery)",
+    "status": "needs_verification"
+   },
+   {
+    "line_no": 3,
+    "description": "Complete blood count (CBC)",
+    "status": "needs_verification"
+   },
+   {
+    "line_no": 4,
+    "description": "C-reactive protein (CRP)",
+    "status": "needs_verification"
+   },
+   {
+    "line_no": 5,
+    "description": "C-reactive protein (CRP)",
+    "status": "needs_verification"
+   },
+   {
+    "line_no": 6,
+    "description": "USG abdomen",
+    "status": "needs_verification"
+   },
+   {
+    "line_no": 7,
+    "description": "Laparoscopic appendectomy - surgeon fee",
+    "status": "needs_verification"
+   },
+   {
+    "line_no": 8,
+    "description": "Operation theatre charges",
+    "status": "needs_verification"
+   },
+   {
+    "line_no": 9,
+    "description": "Anaesthesia - General, complex (Grade IV)",
+    "status": "needs_verification"
+   },
+   {
+    "line_no": 10,
+    "description": "Inj. Ceftriaxone 1g",
+    "status": "needs_verification"
+   },
+   {
+    "line_no": 11,
+    "description": "Inj. Paracetamol 1g IV",
+    "status": "needs_verification"
+   },
+   {
+    "line_no": 12,
+    "description": "Surgical consumables kit",
+    "status": "needs_verification"
+   },
+   {
+    "line_no": 13,
+    "description": "Gloves and masks pack",
+    "status": "needs_verification"
+   },
+   {
+    "line_no": 14,
+    "description": "Attendant food",
+    "status": "potentially_non_payable"
+   }
+  ],
+  "recovery_scenario": {
+   "likely": 27448.0,
+   "upper": 27448.0,
+   "confirmed": false
+  }
+ },
+ "healthcare_audit": {
+  "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+  "total_billed": 133540.0,
+  "total_billed_basis": "printed_total",
+  "potential_discrepancy": 0.0,
+  "benchmark_variance": 0.0,
+  "finding_counts": {
+   "clear": 2,
+   "flagged": 0,
+   "needs_review": 45
+  },
+  "warning_count": 45,
+  "findings": [
+   {
+    "finding_id": "H-6d8f11c3c7f6007c",
+    "type": "NON_PAYABLE_ITEM",
+    "title": "Non Payable Item",
+    "bill_lines": [
+     1
+    ],
+    "bill_evidence": "Line 1: Room charges - Twin sharing; billed \u20b916,800",
+    "policy": null,
+    "explanation": "No active, applicable, verified non-payable item rule is available. No exclusion was inferred.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": {
+      "line_no": 1,
+      "page_number": 1,
+      "source_text": "1 | 2026-09-21 | RM-TWN | Room charges - Twin sharing | Room | 4 | 4,200 | 16,800"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "1",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 16800.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NON_PAYABLE_ITEM",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "reference_unavailable"
+   },
+   {
+    "finding_id": "H-8bbf3ef1c99ac7c9",
+    "type": "NON_PAYABLE_ITEM",
+    "title": "Non Payable Item",
+    "bill_lines": [
+     2
+    ],
+    "bill_evidence": "Line 2: Specialist consultation (General Surgery); billed \u20b94,500",
+    "policy": null,
+    "explanation": "No active, applicable, verified non-payable item rule is available. No exclusion was inferred.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": {
+      "line_no": 2,
+      "page_number": 1,
+      "source_text": "2 | 2026-09-21 | CON-SPL | Specialist consultation (General Surgery) | Consultation | 3 | 1,500 | 4,500"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "2",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 4500.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NON_PAYABLE_ITEM",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "reference_unavailable"
+   },
+   {
+    "finding_id": "H-01cd0ad4751f243d",
+    "type": "NON_PAYABLE_ITEM",
+    "title": "Non Payable Item",
+    "bill_lines": [
+     3
+    ],
+    "bill_evidence": "Line 3: Complete blood count (CBC); billed \u20b9450",
+    "policy": null,
+    "explanation": "No active, applicable, verified non-payable item rule is available. No exclusion was inferred.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": {
+      "line_no": 3,
+      "page_number": 1,
+      "source_text": "3 | 2026-09-21 | LAB-CBC | Complete blood count (CBC) | Laboratory | 1 | 450 | 450"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "3",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 450.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NON_PAYABLE_ITEM",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "reference_unavailable"
+   },
+   {
+    "finding_id": "H-31f5cd58e4db6b74",
+    "type": "NON_PAYABLE_ITEM",
+    "title": "Non Payable Item",
+    "bill_lines": [
+     4
+    ],
+    "bill_evidence": "Line 4: C-reactive protein (CRP); billed \u20b9700",
+    "policy": null,
+    "explanation": "No active, applicable, verified non-payable item rule is available. No exclusion was inferred.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": {
+      "line_no": 4,
+      "page_number": 1,
+      "source_text": "4 | 2026-09-21 | LAB-CRP | C-reactive protein (CRP) | Laboratory | 1 | 700 | 700"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "4",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 700.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NON_PAYABLE_ITEM",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "reference_unavailable"
+   },
+   {
+    "finding_id": "H-7e296c82e4656476",
+    "type": "NON_PAYABLE_ITEM",
+    "title": "Non Payable Item",
+    "bill_lines": [
+     5
+    ],
+    "bill_evidence": "Line 5: C-reactive protein (CRP); billed \u20b9700",
+    "policy": null,
+    "explanation": "No active, applicable, verified non-payable item rule is available. No exclusion was inferred.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": {
+      "line_no": 5,
+      "page_number": 1,
+      "source_text": "5 | 2026-09-21 | LAB-CRP | C-reactive protein (CRP) | Laboratory | 1 | 700 | 700"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "5",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 700.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NON_PAYABLE_ITEM",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "reference_unavailable"
+   },
+   {
+    "finding_id": "H-d9f348865bf35c5b",
+    "type": "NON_PAYABLE_ITEM",
+    "title": "Non Payable Item",
+    "bill_lines": [
+     6
+    ],
+    "bill_evidence": "Line 6: USG abdomen; billed \u20b91,800",
+    "policy": null,
+    "explanation": "No active, applicable, verified non-payable item rule is available. No exclusion was inferred.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": {
+      "line_no": 6,
+      "page_number": 1,
+      "source_text": "6 | 2026-09-21 | RAD-USG | USG abdomen | Radiology | 1 | 1,800 | 1,800"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "6",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 1800.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NON_PAYABLE_ITEM",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "reference_unavailable"
+   },
+   {
+    "finding_id": "H-982fada4ace78b64",
+    "type": "NON_PAYABLE_ITEM",
+    "title": "Non Payable Item",
+    "bill_lines": [
+     7
+    ],
+    "bill_evidence": "Line 7: Laparoscopic appendectomy - surgeon fee; billed \u20b958,000",
+    "policy": null,
+    "explanation": "No active, applicable, verified non-payable item rule is available. No exclusion was inferred.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": {
+      "line_no": 7,
+      "page_number": 1,
+      "source_text": "7 | 2026-09-22 | OT-LAP-APP | Laparoscopic appendectomy - surgeon fee | Surgery | 1 | 58,000 | 58,000"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "7",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 58000.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NON_PAYABLE_ITEM",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "reference_unavailable"
+   },
+   {
+    "finding_id": "H-b01c11f2ba5110d3",
+    "type": "NON_PAYABLE_ITEM",
+    "title": "Non Payable Item",
+    "bill_lines": [
+     8
+    ],
+    "bill_evidence": "Line 8: Operation theatre charges; billed \u20b919,500",
+    "policy": null,
+    "explanation": "No active, applicable, verified non-payable item rule is available. No exclusion was inferred.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": {
+      "line_no": 8,
+      "page_number": 1,
+      "source_text": "8 | 2026-09-22 | OT-CHG | Operation theatre charges | Operation Theatre | 1 | 19,500 | 19,500"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "8",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 19500.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NON_PAYABLE_ITEM",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "reference_unavailable"
+   },
+   {
+    "finding_id": "H-8415f62a826ed5e0",
+    "type": "NON_PAYABLE_ITEM",
+    "title": "Non Payable Item",
+    "bill_lines": [
+     9
+    ],
+    "bill_evidence": "Line 9: Anaesthesia - General, complex (Grade IV); billed \u20b923,000",
+    "policy": null,
+    "explanation": "No active, applicable, verified non-payable item rule is available. No exclusion was inferred.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": {
+      "line_no": 9,
+      "page_number": 1,
+      "source_text": "9 | 2026-09-22 | ANS-GA-4 | Anaesthesia - General, complex (Grade IV) | Anaesthesia | 1 | 23,000 | 23,000"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "9",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 23000.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NON_PAYABLE_ITEM",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "reference_unavailable"
+   },
+   {
+    "finding_id": "H-427d4c82ff61e3c9",
+    "type": "NON_PAYABLE_ITEM",
+    "title": "Non Payable Item",
+    "bill_lines": [
+     10
+    ],
+    "bill_evidence": "Line 10: Inj. Ceftriaxone 1g; billed \u20b92,160",
+    "policy": null,
+    "explanation": "No active, applicable, verified non-payable item rule is available. No exclusion was inferred.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": {
+      "line_no": 10,
+      "page_number": 1,
+      "source_text": "10 | 2026-09-22 | PH-CEF1G | Inj. Ceftriaxone 1g | Pharmacy | 8 | 180 | 2,160"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "10",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 2160.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NON_PAYABLE_ITEM",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "reference_unavailable"
+   },
+   {
+    "finding_id": "H-1239cff2d0d9472b",
+    "type": "NON_PAYABLE_ITEM",
+    "title": "Non Payable Item",
+    "bill_lines": [
+     11
+    ],
+    "bill_evidence": "Line 11: Inj. Paracetamol 1g IV; billed \u20b9480",
+    "policy": null,
+    "explanation": "No active, applicable, verified non-payable item rule is available. No exclusion was inferred.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": {
+      "line_no": 11,
+      "page_number": 1,
+      "source_text": "11 | 2026-09-22 | PH-PCM-IV | Inj. Paracetamol 1g IV | Pharmacy | 4 | 120 | 480"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "11",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 480.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NON_PAYABLE_ITEM",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "reference_unavailable"
+   },
+   {
+    "finding_id": "H-21b6427de7ebfe30",
+    "type": "NON_PAYABLE_ITEM",
+    "title": "Non Payable Item",
+    "bill_lines": [
+     12
+    ],
+    "bill_evidence": "Line 12: Surgical consumables kit; billed \u20b93,400",
+    "policy": null,
+    "explanation": "No active, applicable, verified non-payable item rule is available. No exclusion was inferred.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": {
+      "line_no": 12,
+      "page_number": 1,
+      "source_text": "12 | 2026-09-22 | CS-KIT | Surgical consumables kit | Consumables | 1 | 3,400 | 3,400"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "12",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 3400.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NON_PAYABLE_ITEM",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "reference_unavailable"
+   },
+   {
+    "finding_id": "H-b6d5580416397197",
+    "type": "NON_PAYABLE_ITEM",
+    "title": "Non Payable Item",
+    "bill_lines": [
+     13
+    ],
+    "bill_evidence": "Line 13: Gloves and masks pack; billed \u20b91,150",
+    "policy": null,
+    "explanation": "No active, applicable, verified non-payable item rule is available. No exclusion was inferred.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": {
+      "line_no": 13,
+      "page_number": 1,
+      "source_text": "13 | 2026-09-22 | NM-PPE | Gloves and masks pack | Non-Medical | 1 | 1,150 | 1,150"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "13",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 1150.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NON_PAYABLE_ITEM",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "reference_unavailable"
+   },
+   {
+    "finding_id": "H-d19486d20c5cff13",
+    "type": "NON_PAYABLE_ITEM",
+    "title": "Non Payable Item",
+    "bill_lines": [
+     14
+    ],
+    "bill_evidence": "Line 14: Attendant food; billed \u20b9900",
+    "policy": null,
+    "explanation": "No active, applicable, verified non-payable item rule is available. No exclusion was inferred.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": {
+      "line_no": 14,
+      "page_number": 1,
+      "source_text": "14 | 2026-09-23 | NM-ATF | Attendant food | Non-Medical | 3 | 300 | 900"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "14",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 900.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NON_PAYABLE_ITEM",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "reference_unavailable"
+   },
+   {
+    "finding_id": "H-85dd41db24a48acd",
+    "type": "ROOM_RENT_LIMIT",
+    "title": "Room Rent Limit",
+    "bill_lines": [
+     1
+    ],
+    "bill_evidence": "Line 1: Room charges - Twin sharing; billed \u20b916,800",
+    "policy": {
+     "clause_id": "3.1",
+     "title": "Room Rent and ICU Charges",
+     "quote": "Room rent for a normal room is payable up to 1% of the Sum Insured per day, i.e. Rs. 5,000 per day. ICU charges are payable up to 2% of the Sum Insured per day, i.e. Rs. 10,000 per day. If the Insured Person opts for a room with higher rent, only the excess room rent is non-payable; no proportionate deduction is applied to other charges.",
+     "source": "06_policy_wording_niramaya_health_plus.pdf",
+     "page": 1,
+     "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+     "version_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896"
+    },
+    "explanation": "Room rent billed at \u20b94,200/day; provided policy limit \u20b95,000/day. For 4 billed days, direct excess is \u20b90. This does not activate proportionate adjustments to other charges.",
+    "confidence": "High",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "daily_limit": 5000.0,
+     "actual_daily_rate": 4200.0,
+     "days": 4.0,
+     "calculation": "billed_amount - min(billed_amount, days * daily_limit)",
+     "limit_type": "per_day",
+     "source": {
+      "source_name": "06_policy_wording_niramaya_health_plus.pdf",
+      "source_type": "POLICY",
+      "document_id": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+      "page_number": 1,
+      "version": "2c5325af4b21152568b49651bcb183be78c6b6d6e13b01c9d65b2b8205a4a896",
+      "effective_date": null,
+      "imported_at": null,
+      "verification_status": "provided_policy_evidence",
+      "notes": "Calculation uses the supplied normalized policy limit and its cited wording.",
+      "source_quote": "Room rent for a normal room is payable up to 1% of the Sum Insured per day, i.e. Rs. 5,000 per day. ICU charges are payable up to 2% of the Sum Insured per day, i.e. Rs. 10,000 per day. If the Insured Person opts for a room with higher rent, only the excess room rent is non-payable; no proportionate deduction is applied to other charges."
+     },
+     "bill": {
+      "line_no": 1,
+      "page_number": 1,
+      "source_text": "1 | 2026-09-21 | RM-TWN | Room charges - Twin sharing | Room | 4 | 4,200 | 16,800"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "1",
+    "severity": "info",
+    "status": "clear",
+    "billed_amount": 16800.0,
+    "reference_amount": 16800.0,
+    "potential_difference": 0.0,
+    "rule_id": null,
+    "rule_name": "ROOM_RENT_LIMIT",
+    "confidence_score": 0.98,
+    "match_status": "not_applicable",
+    "comparison": null
+   },
+   {
+    "finding_id": "H-661a4029c83b465a",
+    "type": "ROOM_RENT_PROPORTIONATE",
+    "title": "Room Rent Proportionate",
+    "bill_lines": [],
+    "bill_evidence": "Claim-level room-rent context",
+    "policy": null,
+    "explanation": "The actual daily room rate does not exceed the provided limit; no proportionate adjustment was triggered.",
+    "confidence": "High",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "bill": null
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": null,
+    "severity": "info",
+    "status": "clear",
+    "billed_amount": null,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "ROOM_RENT_PROPORTIONATE",
+    "confidence_score": 0.98,
+    "match_status": "not_applicable",
+    "comparison": null
+   },
+   {
+    "finding_id": "H-81caab7ce619c677",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "CGHS reference check",
+    "bill_lines": [
+     1
+    ],
+    "bill_evidence": "Line 1: Room charges - Twin sharing; billed \u20b916,800",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "CGHS",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 1,
+      "page_number": 1,
+      "source_text": "1 | 2026-09-21 | RM-TWN | Room charges - Twin sharing | Room | 4 | 4,200 | 16,800"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "1",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 16800.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "CGHS reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-f7be731e53e34531",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "PMJAY reference check",
+    "bill_lines": [
+     1
+    ],
+    "bill_evidence": "Line 1: Room charges - Twin sharing; billed \u20b916,800",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "PMJAY",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 1,
+      "page_number": 1,
+      "source_text": "1 | 2026-09-21 | RM-TWN | Room charges - Twin sharing | Room | 4 | 4,200 | 16,800"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "1",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 16800.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "PMJAY reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-cb8db899e52601a1",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "CGHS reference check",
+    "bill_lines": [
+     2
+    ],
+    "bill_evidence": "Line 2: Specialist consultation (General Surgery); billed \u20b94,500",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "CGHS",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 2,
+      "page_number": 1,
+      "source_text": "2 | 2026-09-21 | CON-SPL | Specialist consultation (General Surgery) | Consultation | 3 | 1,500 | 4,500"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "2",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 4500.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "CGHS reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-e4f472e237f15ed4",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "PMJAY reference check",
+    "bill_lines": [
+     2
+    ],
+    "bill_evidence": "Line 2: Specialist consultation (General Surgery); billed \u20b94,500",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "PMJAY",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 2,
+      "page_number": 1,
+      "source_text": "2 | 2026-09-21 | CON-SPL | Specialist consultation (General Surgery) | Consultation | 3 | 1,500 | 4,500"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "2",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 4500.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "PMJAY reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-499603092013168a",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "CGHS reference check",
+    "bill_lines": [
+     3
+    ],
+    "bill_evidence": "Line 3: Complete blood count (CBC); billed \u20b9450",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "CGHS",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 3,
+      "page_number": 1,
+      "source_text": "3 | 2026-09-21 | LAB-CBC | Complete blood count (CBC) | Laboratory | 1 | 450 | 450"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "3",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 450.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "CGHS reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-98589c60ec7b5e25",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "PMJAY reference check",
+    "bill_lines": [
+     3
+    ],
+    "bill_evidence": "Line 3: Complete blood count (CBC); billed \u20b9450",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "PMJAY",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 3,
+      "page_number": 1,
+      "source_text": "3 | 2026-09-21 | LAB-CBC | Complete blood count (CBC) | Laboratory | 1 | 450 | 450"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "3",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 450.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "PMJAY reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-acdee53b1ca3f9d7",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "CGHS reference check",
+    "bill_lines": [
+     4
+    ],
+    "bill_evidence": "Line 4: C-reactive protein (CRP); billed \u20b9700",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "CGHS",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 4,
+      "page_number": 1,
+      "source_text": "4 | 2026-09-21 | LAB-CRP | C-reactive protein (CRP) | Laboratory | 1 | 700 | 700"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "4",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 700.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "CGHS reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-cc18b2b8e3a9853f",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "PMJAY reference check",
+    "bill_lines": [
+     4
+    ],
+    "bill_evidence": "Line 4: C-reactive protein (CRP); billed \u20b9700",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "PMJAY",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 4,
+      "page_number": 1,
+      "source_text": "4 | 2026-09-21 | LAB-CRP | C-reactive protein (CRP) | Laboratory | 1 | 700 | 700"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "4",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 700.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "PMJAY reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-97aa97157c66ca30",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "CGHS reference check",
+    "bill_lines": [
+     5
+    ],
+    "bill_evidence": "Line 5: C-reactive protein (CRP); billed \u20b9700",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "CGHS",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 5,
+      "page_number": 1,
+      "source_text": "5 | 2026-09-21 | LAB-CRP | C-reactive protein (CRP) | Laboratory | 1 | 700 | 700"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "5",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 700.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "CGHS reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-54a6a4aaf7ddd6fc",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "PMJAY reference check",
+    "bill_lines": [
+     5
+    ],
+    "bill_evidence": "Line 5: C-reactive protein (CRP); billed \u20b9700",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "PMJAY",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 5,
+      "page_number": 1,
+      "source_text": "5 | 2026-09-21 | LAB-CRP | C-reactive protein (CRP) | Laboratory | 1 | 700 | 700"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "5",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 700.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "PMJAY reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-b5c6c5f2982b3101",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "CGHS reference check",
+    "bill_lines": [
+     6
+    ],
+    "bill_evidence": "Line 6: USG abdomen; billed \u20b91,800",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "CGHS",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 6,
+      "page_number": 1,
+      "source_text": "6 | 2026-09-21 | RAD-USG | USG abdomen | Radiology | 1 | 1,800 | 1,800"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "6",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 1800.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "CGHS reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-de09b1ac73a71db3",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "PMJAY reference check",
+    "bill_lines": [
+     6
+    ],
+    "bill_evidence": "Line 6: USG abdomen; billed \u20b91,800",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "PMJAY",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 6,
+      "page_number": 1,
+      "source_text": "6 | 2026-09-21 | RAD-USG | USG abdomen | Radiology | 1 | 1,800 | 1,800"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "6",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 1800.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "PMJAY reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-fd0b68de4d66861e",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "CGHS reference check",
+    "bill_lines": [
+     7
+    ],
+    "bill_evidence": "Line 7: Laparoscopic appendectomy - surgeon fee; billed \u20b958,000",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "CGHS",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 7,
+      "page_number": 1,
+      "source_text": "7 | 2026-09-22 | OT-LAP-APP | Laparoscopic appendectomy - surgeon fee | Surgery | 1 | 58,000 | 58,000"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "7",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 58000.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "CGHS reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-3d71d3ef56262524",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "PMJAY reference check",
+    "bill_lines": [
+     7
+    ],
+    "bill_evidence": "Line 7: Laparoscopic appendectomy - surgeon fee; billed \u20b958,000",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "PMJAY",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 7,
+      "page_number": 1,
+      "source_text": "7 | 2026-09-22 | OT-LAP-APP | Laparoscopic appendectomy - surgeon fee | Surgery | 1 | 58,000 | 58,000"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "7",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 58000.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "PMJAY reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-e091a031e7aef983",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "CGHS reference check",
+    "bill_lines": [
+     8
+    ],
+    "bill_evidence": "Line 8: Operation theatre charges; billed \u20b919,500",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "CGHS",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 8,
+      "page_number": 1,
+      "source_text": "8 | 2026-09-22 | OT-CHG | Operation theatre charges | Operation Theatre | 1 | 19,500 | 19,500"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "8",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 19500.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "CGHS reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-a187e0d9c047e6ee",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "PMJAY reference check",
+    "bill_lines": [
+     8
+    ],
+    "bill_evidence": "Line 8: Operation theatre charges; billed \u20b919,500",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "PMJAY",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 8,
+      "page_number": 1,
+      "source_text": "8 | 2026-09-22 | OT-CHG | Operation theatre charges | Operation Theatre | 1 | 19,500 | 19,500"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "8",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 19500.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "PMJAY reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-c3012cd0d77e508a",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "CGHS reference check",
+    "bill_lines": [
+     9
+    ],
+    "bill_evidence": "Line 9: Anaesthesia - General, complex (Grade IV); billed \u20b923,000",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "CGHS",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 9,
+      "page_number": 1,
+      "source_text": "9 | 2026-09-22 | ANS-GA-4 | Anaesthesia - General, complex (Grade IV) | Anaesthesia | 1 | 23,000 | 23,000"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "9",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 23000.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "CGHS reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-a8352bc3fe54efdf",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "PMJAY reference check",
+    "bill_lines": [
+     9
+    ],
+    "bill_evidence": "Line 9: Anaesthesia - General, complex (Grade IV); billed \u20b923,000",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "PMJAY",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 9,
+      "page_number": 1,
+      "source_text": "9 | 2026-09-22 | ANS-GA-4 | Anaesthesia - General, complex (Grade IV) | Anaesthesia | 1 | 23,000 | 23,000"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "9",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 23000.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "PMJAY reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-ed7320477014a5c2",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "CGHS reference check",
+    "bill_lines": [
+     10
+    ],
+    "bill_evidence": "Line 10: Inj. Ceftriaxone 1g; billed \u20b92,160",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "CGHS",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 10,
+      "page_number": 1,
+      "source_text": "10 | 2026-09-22 | PH-CEF1G | Inj. Ceftriaxone 1g | Pharmacy | 8 | 180 | 2,160"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "10",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 2160.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "CGHS reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-9433a29c00760e96",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "PMJAY reference check",
+    "bill_lines": [
+     10
+    ],
+    "bill_evidence": "Line 10: Inj. Ceftriaxone 1g; billed \u20b92,160",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "PMJAY",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 10,
+      "page_number": 1,
+      "source_text": "10 | 2026-09-22 | PH-CEF1G | Inj. Ceftriaxone 1g | Pharmacy | 8 | 180 | 2,160"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "10",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 2160.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "PMJAY reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-efe1241414a18351",
+    "type": "NPPA_REFERENCE",
+    "title": "NPPA reference check",
+    "bill_lines": [
+     10
+    ],
+    "bill_evidence": "Line 10: Inj. Ceftriaxone 1g; billed \u20b92,160",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "NPPA",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 10,
+      "page_number": 1,
+      "source_text": "10 | 2026-09-22 | PH-CEF1G | Inj. Ceftriaxone 1g | Pharmacy | 8 | 180 | 2,160"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "10",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 2160.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NPPA reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-bcb11656d09b695a",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "CGHS reference check",
+    "bill_lines": [
+     11
+    ],
+    "bill_evidence": "Line 11: Inj. Paracetamol 1g IV; billed \u20b9480",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "CGHS",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 11,
+      "page_number": 1,
+      "source_text": "11 | 2026-09-22 | PH-PCM-IV | Inj. Paracetamol 1g IV | Pharmacy | 4 | 120 | 480"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "11",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 480.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "CGHS reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-bbe06c4e4b526590",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "PMJAY reference check",
+    "bill_lines": [
+     11
+    ],
+    "bill_evidence": "Line 11: Inj. Paracetamol 1g IV; billed \u20b9480",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "PMJAY",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 11,
+      "page_number": 1,
+      "source_text": "11 | 2026-09-22 | PH-PCM-IV | Inj. Paracetamol 1g IV | Pharmacy | 4 | 120 | 480"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "11",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 480.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "PMJAY reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-d691e1cdf4864261",
+    "type": "NPPA_REFERENCE",
+    "title": "NPPA reference check",
+    "bill_lines": [
+     11
+    ],
+    "bill_evidence": "Line 11: Inj. Paracetamol 1g IV; billed \u20b9480",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "NPPA",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 11,
+      "page_number": 1,
+      "source_text": "11 | 2026-09-22 | PH-PCM-IV | Inj. Paracetamol 1g IV | Pharmacy | 4 | 120 | 480"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "11",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 480.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NPPA reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-8fdc5b8939571381",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "CGHS reference check",
+    "bill_lines": [
+     12
+    ],
+    "bill_evidence": "Line 12: Surgical consumables kit; billed \u20b93,400",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "CGHS",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 12,
+      "page_number": 1,
+      "source_text": "12 | 2026-09-22 | CS-KIT | Surgical consumables kit | Consumables | 1 | 3,400 | 3,400"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "12",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 3400.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "CGHS reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-8f851806a722fe3d",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "PMJAY reference check",
+    "bill_lines": [
+     12
+    ],
+    "bill_evidence": "Line 12: Surgical consumables kit; billed \u20b93,400",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "PMJAY",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 12,
+      "page_number": 1,
+      "source_text": "12 | 2026-09-22 | CS-KIT | Surgical consumables kit | Consumables | 1 | 3,400 | 3,400"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "12",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 3400.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "PMJAY reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-17b5d3414ffa7310",
+    "type": "NPPA_REFERENCE",
+    "title": "NPPA reference check",
+    "bill_lines": [
+     12
+    ],
+    "bill_evidence": "Line 12: Surgical consumables kit; billed \u20b93,400",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "NPPA",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 12,
+      "page_number": 1,
+      "source_text": "12 | 2026-09-22 | CS-KIT | Surgical consumables kit | Consumables | 1 | 3,400 | 3,400"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "12",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 3400.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "NPPA reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-38c02fe5d72fc8a1",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "CGHS reference check",
+    "bill_lines": [
+     13
+    ],
+    "bill_evidence": "Line 13: Gloves and masks pack; billed \u20b91,150",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "CGHS",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 13,
+      "page_number": 1,
+      "source_text": "13 | 2026-09-22 | NM-PPE | Gloves and masks pack | Non-Medical | 1 | 1,150 | 1,150"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "13",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 1150.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "CGHS reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-3ebe998f932a9d84",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "PMJAY reference check",
+    "bill_lines": [
+     13
+    ],
+    "bill_evidence": "Line 13: Gloves and masks pack; billed \u20b91,150",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "PMJAY",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 13,
+      "page_number": 1,
+      "source_text": "13 | 2026-09-22 | NM-PPE | Gloves and masks pack | Non-Medical | 1 | 1,150 | 1,150"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "13",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 1150.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "PMJAY reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-c706792d1082972e",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "CGHS reference check",
+    "bill_lines": [
+     14
+    ],
+    "bill_evidence": "Line 14: Attendant food; billed \u20b9900",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "CGHS",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 14,
+      "page_number": 1,
+      "source_text": "14 | 2026-09-23 | NM-ATF | Attendant food | Non-Medical | 3 | 300 | 900"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "14",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 900.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "CGHS reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   },
+   {
+    "finding_id": "H-9002b49a71f54fb6",
+    "type": "HEALTHCARE_BENCHMARK",
+    "title": "PMJAY reference check",
+    "bill_lines": [
+     14
+    ],
+    "bill_evidence": "Line 14: Attendant food; billed \u20b9900",
+    "policy": null,
+    "explanation": "No active verified reference matches the item, date, product and geographic scope.",
+    "confidence": "Worth reviewing",
+    "impact": 0.0,
+    "counterparty": "hospital",
+    "bill_correction": 0.0,
+    "correction_line": null,
+    "detected_by": "healthcare_reference_audit",
+    "method": "deterministic source-backed check",
+    "topic": "",
+    "evidence": {
+     "source_type": "PMJAY",
+     "candidate_record_ids": [],
+     "bill": {
+      "line_no": 14,
+      "page_number": 1,
+      "source_text": "14 | 2026-09-23 | NM-ATF | Attendant food | Non-Medical | 3 | 300 | 900"
+     }
+    },
+    "benchmark": null,
+    "claim_id": "case-221bcc0f5ca44d8fa41d010e39d5a60d",
+    "bill_item_id": "14",
+    "severity": "warning",
+    "status": "needs_review",
+    "billed_amount": 900.0,
+    "reference_amount": null,
+    "potential_difference": null,
+    "rule_id": null,
+    "rule_name": "PMJAY reference check",
+    "confidence_score": 0.0,
+    "match_status": "no_match",
+    "comparison": "benchmark_unavailable"
+   }
+  ],
+  "summary_basis": "Potential discrepancy is the largest positive supported adjustment per bill item; CGHS/PMJAY benchmark variances are separate. These are audit scenarios, not guaranteed recovery or regulatory violation determinations.",
+  "warnings": [
+   "Healthcare price references are unavailable; no CGHS, PM-JAY or NPPA rate was inferred.",
+   "No applicable verified non-payable item rules are available; no regulatory exclusion was inferred."
+  ]
+ },
+ "files": {
+  "reconciliation_report.pdf": "/api/cases/case-demo-fixture/files/reconciliation_report.pdf",
+  "dispute_letter_insurer.pdf": "/api/cases/case-demo-fixture/files/dispute_letter_insurer.pdf",
+  "dispute_letter_hospital.pdf": "/api/cases/case-demo-fixture/files/dispute_letter_hospital.pdf"
+ }
+}
